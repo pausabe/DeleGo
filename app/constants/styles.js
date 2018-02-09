@@ -1,15 +1,24 @@
-import { Platform, StyleSheet } from 'react-native'
-const styles = StyleSheet.create({
-  container: {
-    fontFamily: 'Arial',
+import { Platform, StyleSheet } from 'react-native';
 
+import Colors from './Colors';
+
+module.exports = StyleSheet.create({
+  tabContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: Colors.tabBackground,
+  },
+  normalText: {
     ...Platform.select({
       ios: {
-        color: '#333',
+        fontSize: 20,
       },
       android: {
-        color: '#ccc',
+        fontSize: 18,
       },
     }),
-  },
+    textAlign: 'center',
+    margin: 10,
+  }
 });

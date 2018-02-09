@@ -4,30 +4,17 @@ import {
   Text,
   View
 } from 'react-native';
-// import Icons from 'react-native-vector-icons/Ionicons';
+
+import Styles from '../constants/Styles';
 
 export default class GroupsTabView extends Component<{}> {
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
+      <View style={Styles.tabContainer}>
+        <Text style={Styles.normalText}>
           {this.props.textToShow}
         </Text>
       </View>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-});
