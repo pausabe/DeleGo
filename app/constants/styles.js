@@ -20,5 +20,8 @@ module.exports = StyleSheet.create({
     }),
     textAlign: 'center',
     margin: 10,
+  },
+  headerBarContainer: {
+    backgroundColor: Colors.headerBarBackground,
   }
 });

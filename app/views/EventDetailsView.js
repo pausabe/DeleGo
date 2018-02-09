@@ -6,7 +6,7 @@ import {
 
 import Styles from '../constants/Styles';
 
-export default class GroupsTabView extends Component<{}> {
+export default class EventDetailsView extends Component<{}> {
   render() {
     return (
       <View style={Styles.tabContainer}>

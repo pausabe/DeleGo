@@ -9,9 +9,17 @@ export default class EventsController extends Component<{}> {
     this.eventsData = new EventsModel();
   }
 
+  buttonPressedCB(){
+    this.props.navigation.navigate('EventDetails');
+  }
+
   render() {
     return (
-      <EventsTabView textToShow={this.eventsData.getTextToShow()}/>
+      <EventsTabView
+        textToShow={this.eventsData.getTextToShow()}
+        buttonText={this.eventsData.getButtonText()}
+        buttonPressedCB={this.buttonPressedCB.bind(this)}
+      />
     );
   }
 }
