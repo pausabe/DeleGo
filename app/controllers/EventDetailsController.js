@@ -5,7 +5,7 @@ import EventDetailsModel from "../models/EventDetailsModel";
 export default class EventDetailsController extends Component<{}> {
   constructor(props){
     super(props);
-
+    
     this.eventData = new EventDetailsModel();
   }
 

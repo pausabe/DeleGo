@@ -5,19 +5,18 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HeaderBar from './app/components/HeaderBar';
 import Styles from './app/constants/Styles';
 import Colors from './app/constants/Colors';
-import Labels from './app/constants/Labels';
-const labels = new Labels();
+import LanguagesSelector from './app/languages/selector';
 import EventsTab from './app/controllers/EventsController';
-import EventDetailsController from './app/controllers/EventDetailsController';
+import EventDetailsView from './app/controllers/EventDetailsController';
 import GroupsTab from './app/controllers/GroupsController';
 
-const harcodedLang = "ca";
+const lang = new LanguagesSelector("ca");
 
 const EventsStack = StackNavigator({
   EventsTab: {
     screen: EventsTab,
     navigationOptions: {
-      title: labels.eventsTabTitle(harcodedLang),
+      title: lang.events.tabTitle,
       headerTitle: <HeaderBar />,
       headerStyle: Styles.headerBarContainer,
       tabBarIcon: ({ focused, tintColor }) => {
@@ -28,11 +27,11 @@ const EventsStack = StackNavigator({
     },
   },
   EventDetails: {
-    screen: GroupsTab,
-    navigationOptions: {
+    screen: EventDetailsView,
+    navigationOptions: ({navigation}) => ({
       tabBarVisible: false,
       headerStyle: Styles.headerBarContainer
-    }
+    })
   }
 });
 
@@ -40,7 +39,7 @@ const GroupsStack = StackNavigator({
   GroupsTab: {
     screen: GroupsTab,
     navigationOptions: {
-      title: labels.groupsTabTitle(harcodedLang),
+      title: lang.groups.tabTitle,
       headerTitle: <HeaderBar />,
       headerStyle: Styles.headerBarContainer,
       headerStyle: Styles.headerBarContainer,
@@ -61,7 +60,7 @@ export default TabNavigator(
   {
     tabBarOptions: {
       activeTintColor: Colors.brandBlue,
-      inactiveTintColor: Colors.tabBarBackgound,
+      inactiveTintColor: Colors.tabBarInactive,
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',
