@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import ModelAdapter from "./adapters/EventsModelAdapter";
+import EventItem from "./components/EventItem";
 import Styles from '../constants/Styles';
 
 export default class EventsView extends Component<{}> {
@@ -22,7 +23,6 @@ export default class EventsView extends Component<{}> {
       loading: false,
       data: [],
       page: 1,
-      seed: 1,
       error: null,
       refreshing: false
     };
@@ -33,30 +33,26 @@ export default class EventsView extends Component<{}> {
   }
 
   makeRemoteRequest(){
-    const { page, seed } = this.state;
-    const url = `https://randomuser.me/api/?seed=${seed}&page=${page}&results=20`;
     this.setState({ loading: true });
 
-    fetch(url)
-     .then(res => res.json())
-     .then(res => {
-       this.setState({
-         data: page === 1 ? res.results : [...this.state.data, ...res.results],
-         error: res.error || null,
-         loading: false,
-         refreshing: false
-       });
-     })
-     .catch(error => {
-       this.setState({ error, loading: false });
-     });
+    this.mAdapter.getEventsData(this.state.page)
+      .then(res => {
+        this.setState({
+          data: this.state.page === 1 ? res.results : [...this.state.data, ...res.results],
+          error: res.error || null,
+          loading: false,
+          refreshing: false
+        });
+      })
+      .catch(error => {
+        this.setState({ error, loading: false, refreshing: false });
+      });
   }
 
   handleRefresh(){
     this.setState(
       {
         page: 1,
-        seed: this.state.seed + 1,
         refreshing: true
       },
       () => {
@@ -68,7 +64,7 @@ export default class EventsView extends Component<{}> {
   handleLoadMore(){
     this.setState(
       {
-        page: this.state.page + 1
+        page: this.state.page + 1,
       },
       () => {
         this.makeRemoteRequest();
@@ -76,70 +72,32 @@ export default class EventsView extends Component<{}> {
     );
   };
 
-  renderSeparator(){
-    return (
-      <View
-        style={{
-          height: 1,
-          width: "86%",
-          backgroundColor: "#CED0CE",
-          marginLeft: "14%"
-        }}
-      />
-    );
-  }
-
   renderFooter(){
-    if (!this.state.loading) return null;
+    if (!this.state.loading || this.state.refreshing) return null;
 
     return (
-      <View
-        style={{
-          paddingVertical: 20,
-          borderTopWidth: 1,
-          borderColor: "#CED0CE"
-        }}
-      >
+      <View style={{paddingVertical: 20,}}>
         <ActivityIndicator animating size="large" />
       </View>
     );
   }
 
   render() {
-    /*return (
-      <List containerStyle={{ borderTopWidth: 0, borderBottomWidth: 0 }}>
-        <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => (
-            <ListItem
-              roundAvatar
-              title={`${item.name.first} ${item.name.last}`}
-              subtitle={item.email}
-              avatar={{ uri: item.picture.thumbnail }}
-              containerStyle={{ borderBottomWidth: 0 }}
-            />
-          )}
-          keyExtractor={item => item.email}
-          ItemSeparatorComponent={this.renderSeparator.bind(this)}
-          ListFooterComponent={this.renderFooter.bind(this)}
-          onRefresh={this.handleRefresh.bind(this)}
-          refreshing={this.state.refreshing}
-          onEndReached={this.handleLoadMore.bind(this)}
-          onEndReachedThreshold={50}
-        />
-      </List>
-    );*/
     return (
-      <View style={Styles.tabContainer}>
-          <ScrollView>
-            <Text style={Styles.normalText}>
-              {this.mAdapter.getTextToShow()}
-            </Text>
-            <TouchableOpacity onPress={this.props.buttonPressedCB}>
-              <Text style={Styles.normalText}>{this.mAdapter.getButtonText()}</Text>
-            </TouchableOpacity>
-        </ScrollView>
-      </View>
+      <FlatList
+        data={this.state.data}
+        renderItem={({ item }) => (
+          <EventItem
+            email={item.email}
+          />
+        )}
+        keyExtractor={item => item.email}
+        ListFooterComponent={this.renderFooter.bind(this)}
+        onRefresh={this.handleRefresh.bind(this)}
+        refreshing={this.state.refreshing}
+        onEndReached={this.handleLoadMore.bind(this)}
+        onEndReachedThreshold={0}
+      />
     );
   }
 }

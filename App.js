@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {TabNavigator, TabBarBottom, StackNavigator} from "react-navigation";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import HeaderBar from './app/components/HeaderBar';
+import HeaderBar from './app/view/components/HeaderBar';
 import Styles from './app/constants/Styles';
 import Colors from './app/constants/Colors';
 import LanguagesSelector from './app/languages/selector';
