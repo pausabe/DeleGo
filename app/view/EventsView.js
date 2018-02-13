@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { List, ListItem } from "react-native-elements";
+import { List } from "react-native-elements";
 import {
   TouchableOpacity,
   Text,
@@ -33,8 +33,7 @@ export default class EventsView extends Component<{}> {
   }
 
   makeRemoteRequest(){
-    this.setState({ loading: true });
-
+    console.log("request page n: "+this.state.page);
     this.mAdapter.getEventsData(this.state.page)
       .then(res => {
         this.setState({
@@ -45,6 +44,7 @@ export default class EventsView extends Component<{}> {
         });
       })
       .catch(error => {
+        console.log("getEventsData Error: ",error);
         this.setState({ error, loading: false, refreshing: false });
       });
   }
@@ -62,9 +62,11 @@ export default class EventsView extends Component<{}> {
   }
 
   handleLoadMore(){
+    console.log("loading more and more");
     this.setState(
       {
         page: this.state.page + 1,
+        loading: true
       },
       () => {
         this.makeRemoteRequest();
@@ -88,10 +90,10 @@ export default class EventsView extends Component<{}> {
         data={this.state.data}
         renderItem={({ item }) => (
           <EventItem
-            email={item.email}
+            item={item}
           />
         )}
-        keyExtractor={item => item.email}
+        keyExtractor={item => item.id}
         ListFooterComponent={this.renderFooter.bind(this)}
         onRefresh={this.handleRefresh.bind(this)}
         refreshing={this.state.refreshing}
