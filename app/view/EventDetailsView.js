@@ -13,7 +13,7 @@ export default class EventDetailsView extends Component<{}> {
       <View style={Styles.tabContainer}>
         <ScrollView>
           <Text style={Styles.normalText}>
-            {"super yeah"}
+            {"Event"+this.props.itemId}
           </Text>
         </ScrollView>
       </View>

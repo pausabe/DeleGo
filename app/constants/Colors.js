@@ -5,4 +5,5 @@ module.exports = {
   tabBarInactive: 'grey',
   headerBarBackground: '#6898ee',
   tabBackground: '#F5FCFF',
+  backgroundEventItem: '#CED0CE',
 };

@@ -23,5 +23,14 @@ module.exports = StyleSheet.create({
   },
   headerBarContainer: {
     backgroundColor: Colors.headerBarBackground,
+  },
+  eventsListConainer:{
+    paddingTop: 5,
+  },
+  eventItemConainer:{
+    backgroundColor: Colors.backgroundEventItem,
+    margin: 5,
+    marginHorizontal: 10,
+    padding: 10
   }
 });

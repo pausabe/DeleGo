@@ -33,7 +33,7 @@ export default class EventsView extends Component<{}> {
   }
 
   makeRemoteRequest(){
-    console.log("request page n: "+this.state.page);
+    console.log("requested page n: "+this.state.page);
     this.mAdapter.getEventsData(this.state.page)
       .then(res => {
         this.setState({
@@ -84,22 +84,29 @@ export default class EventsView extends Component<{}> {
     );
   }
 
+  onItemPress(itemId){
+    this.props.onItemPress(itemId: itemId);
+  }
+
   render() {
     return (
-      <FlatList
-        data={this.state.data}
-        renderItem={({ item }) => (
-          <EventItem
-            item={item}
-          />
-        )}
-        keyExtractor={item => item.id}
-        ListFooterComponent={this.renderFooter.bind(this)}
-        onRefresh={this.handleRefresh.bind(this)}
-        refreshing={this.state.refreshing}
-        onEndReached={this.handleLoadMore.bind(this)}
-        onEndReachedThreshold={0}
-      />
+      <View style={Styles.eventsListConainer}>
+        <FlatList
+          data={this.state.data}
+          renderItem={({ item }) => (
+            <EventItem
+              item={item}
+              onPressItem={this.onItemPress.bind(this, item.id)}
+            />
+          )}
+          keyExtractor={item => item.id}
+          ListFooterComponent={this.renderFooter.bind(this)}
+          onRefresh={this.handleRefresh.bind(this)}
+          refreshing={this.state.refreshing}
+          onEndReached={this.handleLoadMore.bind(this)}
+          onEndReachedThreshold={0}
+        />
+      </View>
     );
   }
 }

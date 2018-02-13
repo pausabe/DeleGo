@@ -5,12 +5,29 @@ import {
   TouchableOpacity
  } from 'react-native';
 
+import Styles from '../../constants/Styles';
+
 export default class HeaderBar extends Component {
   render() {
     return(
-      <TouchableOpacity style={{backgroundColor: '#CED0CE', margin: 5, padding: 10}}>
+      <TouchableOpacity
+        style={Styles.eventItemConainer}
+        onPress={this.props.onPressItem}>
         <Text>
-          {"\n\n\n\n\n\n\n\n"}{this.props.item.id}{"\n\n\n\n\n\n\n\n"}
+          {'\n\n\n\n\n\n\n\n'}
+        </Text>
+        <Text>
+          {this.props.item.title}
+        </Text>
+        <Text>
+          {this.props.item.subtitle}
+        </Text>
+        <Text>
+          {
+            this.props.item.date.day+"/"+
+            this.props.item.date.month+"/"+
+            this.props.item.date.year
+          }
         </Text>
       </TouchableOpacity>
     )

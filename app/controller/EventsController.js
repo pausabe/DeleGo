@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import EventsView from "../view/EventsView";
 
 export default class EventsController extends Component<{}> {
-  buttonPressedCB(){
-    this.props.navigation.navigate('EventDetails');
+  onItemPress(itemId){
+    this.props.navigation.navigate('EventDetails',{itemId:itemId});
   }
 
   render() {
     return (
       <EventsView
-        buttonPressedCB={this.buttonPressedCB.bind(this)}
+        onItemPress={this.onItemPress.bind(this)}
       />
     );
   }
