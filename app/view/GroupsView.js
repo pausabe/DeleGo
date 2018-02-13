@@ -6,12 +6,12 @@ import {
 
 import Styles from '../constants/Styles';
 
-export default class GroupsTabView extends Component<{}> {
+export default class GroupsView extends Component<{}> {
   render() {
     return (
       <View style={Styles.tabContainer}>
         <Text style={Styles.normalText}>
-          {this.props.textToShow}
+          {"yeah"}
         </Text>
       </View>
     );

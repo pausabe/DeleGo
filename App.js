@@ -6,9 +6,9 @@ import HeaderBar from './app/components/HeaderBar';
 import Styles from './app/constants/Styles';
 import Colors from './app/constants/Colors';
 import LanguagesSelector from './app/languages/selector';
-import EventsTab from './app/controllers/EventsController';
-import EventDetailsView from './app/controllers/EventDetailsController';
-import GroupsTab from './app/controllers/GroupsController';
+import EventsTab from './app/controller/EventsController';
+import EventDetailsView from './app/controller/EventDetailsController';
+import GroupsTab from './app/controller/GroupsController';
 
 const lang = new LanguagesSelector("ca");
 
