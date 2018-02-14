@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import {TabNavigator, TabBarBottom, StackNavigator} from "react-navigation";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-import HeaderBar from './app/view/components/HeaderBar';
-import Styles from './app/constants/Styles';
-import Colors from './app/constants/Colors';
-import LanguagesSelector from './app/languages/selector';
-import EventsTab from './app/controller/EventsController';
-import EventDetailsView from './app/controller/EventDetailsController';
-import GroupsTab from './app/controller/GroupsController';
+import HeaderBar from './view/components/HeaderBar';
+import Styles from './constants/Styles';
+import Colors from './constants/Colors';
+import LanguagesSelector from './languages/selector';
+import EventsTab from './controller/EventsController';
+import EventDetailsView from './controller/EventDetailsController';
+import GroupsTab from './controller/GroupsController';
 
 const lang = new LanguagesSelector("ca");
 
@@ -30,7 +30,6 @@ const EventsStack = StackNavigator({
     screen: EventDetailsView,
     navigationOptions: ({navigation}) => ({
       tabBarVisible: false,
-      headerStyle: Styles.headerBarContainer
     })
   }
 });

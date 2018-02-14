@@ -1,9 +1,9 @@
 import { Platform } from 'react-native'
 
 module.exports = {
-  brandBlue: "#6898ee",
+  brandBlue: 'rgb(0, 136, 204)',
   tabBarInactive: 'grey',
-  headerBarBackground: '#6898ee',
-  tabBackground: '#F5FCFF',
-  backgroundEventItem: '#CED0CE',
+  headerBarBackground: 'rgb(242, 242, 242)',
+  tabBackground: 'rgba(242, 242, 242, 0.5)',
+  backgroundEventItem: 'white',
 };

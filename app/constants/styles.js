@@ -25,12 +25,22 @@ module.exports = StyleSheet.create({
     backgroundColor: Colors.headerBarBackground,
   },
   eventsListConainer:{
-    paddingTop: 5,
+
   },
   eventItemConainer:{
     backgroundColor: Colors.backgroundEventItem,
-    margin: 5,
-    marginHorizontal: 10,
+    // margin: 5,
+    // marginHorizontal: 10,
+    marginBottom:10
+  },
+  eventItemImageContainer:{
+    backgroundColor:Colors.tabBackground
+  },
+  eventItemImage:{
+    resizeMode:"cover",
+    height:200
+  },
+  eventItemTextContainer:{
     padding: 10
   }
 });

@@ -1,4 +1,4 @@
 import { AppRegistry } from 'react-native';
-import App from './App.js';
+import App from './app/App.js';
 
 AppRegistry.registerComponent('CBCN', () => App);
