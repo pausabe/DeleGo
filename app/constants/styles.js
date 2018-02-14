@@ -2,6 +2,9 @@ import { Platform, StyleSheet } from 'react-native';
 
 import Colors from './Colors';
 
+var Dimensions = require('Dimensions');
+var { width, height } = Dimensions.get('window');
+
 module.exports = StyleSheet.create({
   tabContainer: {
     flex: 1,
@@ -34,10 +37,11 @@ module.exports = StyleSheet.create({
     marginBottom:10
   },
   eventItemImageContainer:{
-    backgroundColor:Colors.tabBackground
+    // backgroundColor:'white'//Colors.tabBackground
   },
   eventItemImage:{
     resizeMode:"cover",
+    width:width,
     height:200
   },
   eventItemTextContainer:{

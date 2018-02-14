@@ -3,6 +3,15 @@ export default class EventsDAO {
     this.RNFS = require('react-native-fs');
   }
 
+  downloadThumbnails(res){
+    console.log("res",res);
+    /*this.RNFS.downloadFile({
+      fromUrl:
+    }).then(
+      console.log("file downloaded");
+    );*/
+  }
+
   getEventsData(page){
     var online = true; //hardcoded
 
@@ -11,6 +20,7 @@ export default class EventsDAO {
       var promise = fetch(url)
        .then(res => res.json())
        .then(res => {
+         this.downloadThumbnails(res);
          //Aquí falta guardar/update larxiu a local
          return res;
        })

@@ -10,7 +10,11 @@
         "month":"4",
         "year":"1994"
       },
-      "picture":"https://pausabe.com/apps/CBCN/images/prova1.jpg"
+      "picture":
+      {
+        "real": "https://pausabe.com/apps/CBCN/images/prova1.jpg",
+        "thumbnail": "https://pausabe.com/apps/CBCN/images/prova1LQ.jpg"
+      }
     },
     {
       "id":"2",
@@ -21,7 +25,11 @@
         "month":"4",
         "year":"1994"
       },
-      "picture":"https://pausabe.com/apps/CBCN/images/prova2.jpg"
+      "picture":
+      {
+        "real": "https://pausabe.com/apps/CBCN/images/prova2.jpg",
+        "thumbnail": "https://pausabe.com/apps/CBCN/images/prova2LQ.jpg"
+      }
     },
     {
       "id":"3",
@@ -32,7 +40,11 @@
         "month":"4",
         "year":"1994"
       },
-      "picture":"https://pausabe.com/apps/CBCN/images/prova3.jpg"
+      "picture":
+      {
+        "real": "https://pausabe.com/apps/CBCN/images/prova3.jpg",
+        "thumbnail": "https://pausabe.com/apps/CBCN/images/prova3LQ.jpg"
+      }
     },
     {
       "id":"4",
@@ -43,7 +55,11 @@
         "month":"4",
         "year":"1994"
       },
-      "picture":"https://pausabe.com/apps/CBCN/images/prova4.jpg"
+      "picture":
+      {
+        "real": "https://pausabe.com/apps/CBCN/images/prova4.jpg",
+        "thumbnail": "https://pausabe.com/apps/CBCN/images/prova4LQ.jpg"
+      }
     }
   ]
 }
