@@ -34,8 +34,8 @@ export default class EventsView extends Component<{}> {
 
   makeRemoteRequest(){
     console.log("requested page n: "+this.state.page);
-    this.mAdapter.getEventsData(this.state.page)
-      .then(res => {
+    this.mAdapter.getEventsData(this.state.page).then(res=>{
+      console.log("finally!",res);
         this.setState({
           data: this.state.page === 1 ? res.results : [...this.state.data, ...res.results],
           error: res.error || null,
