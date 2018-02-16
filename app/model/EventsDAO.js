@@ -4,33 +4,23 @@ export default class EventsDAO {
   constructor(){
     this.RNFS = require('react-native-fs');
 
-    this.path = this.RNFS.DocumentDirectoryPath;
-    if(Platform.OS === 'ios')
-      this.path = this.RNFS.MainBundlePath;
-    this.path += "/events";
-
+    this.path = this.RNFS.DocumentDirectoryPath+"/events";
     console.log("path DAO",this.path);
   }
 
-  makeEventsDir(res){
+  _makeEventsDir(res){
     var promise = new Promise((resolve, reject) => {
       this.RNFS.mkdir(this.path,{NSURLIsExcludedFromBackupKey:true}).then(() => resolve(res));
     });
     return promise;
   }
 
-  downloadThumbnails(res){
+  _downloadThumbnails(res){
     console.log("now thumbns");
     var promise = new Promise((resolve, reject) => {
       var promises = [];
       for(i=0;i<res.results.length;i++){
         console.log("descarregant: ",res.results[i].picture.thumbnail);
-        /*var singleProm = new Promise((resolve, reject) => {
-          setTimeout(() => {
-            console.log("nova promise");
-            resolve();
-          }, 3000);
-        });*/
         var singleProm = this.RNFS.downloadFile({
           fromUrl:res.results[i].picture.thumbnail,
           toFile:this.path+"/thumbnailEvent"+res.results[i].id+".jpg"
@@ -49,32 +39,34 @@ export default class EventsDAO {
   }
 
   getEventsData(page){
-    var online = true; //hardcoded
+    const url = `https://pausabe.com/apps/CBCN/page${page}.json`;
+    var promise = fetch(url, {headers: {'Cache-Control': 'no-cache'}})
+     .then(res => res.json())
+      .then(res => this._makeEventsDir(res))
+       .then(res => this._downloadThumbnails(res))
+     .catch(error => {
+      throw new Error(error);
+    });
+    console.log("fetch promise",promise);
+    return promise;
+  }
 
-    if(online){
-      const url = `https://pausabe.com/apps/CBCN/page${page}.json`;
-      var promise = fetch(url, {headers: {'Cache-Control': 'no-cache'}})
-       .then(res => res.json())
-        .then(res => this.makeEventsDir(res))
-         .then(res => this.downloadThumbnails(res))
-       .catch(error => {
-        throw new Error(error);
+  saveOfflineImage(itemId,imagePath){
+    //fix this!
+    var totalPromise = new Promise((resolve, reject) => {
+      this.RNFS.mkdir(this.path+"/offline",{NSURLIsExcludedFromBackupKey:true}).then(() => {
+        console.log("directory created");
+        console.log("descarregant: ",imagePath);
+        var downPromise = new Promise((resolve, reject) => {
+          this.RNFS.downloadFile({
+            fromUrl:imagePath,
+            toFile:this.path+"/offline/imageEvent"+itemId+".jpg"
+          }).then(()=>resolve());
+        return downPromise;
+        });
       });
-      console.log("fetch promise",promise);
-      return promise;
-    }
-    else{
-      var path = this.path+`/app/local-data/page${page}.json`;
-      console.log("path",path);
-      var promise = this.RNFS.readFile(path, 'utf8')
-        .then(res => {
-          console.log("res:",res);
-          return res;
-        })
-        .catch(error => {
-         throw new Error(error);
-       });
-      return promise;
-    }
+    });
+    console.log("save offline image promise",totalPromise);
+    return totalPromise;
   }
 }

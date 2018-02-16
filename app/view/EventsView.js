@@ -84,8 +84,8 @@ export default class EventsView extends Component<{}> {
     );
   }
 
-  onItemPress(itemId){
-    this.props.onItemPress(itemId: itemId);
+  onPressItem(itemId){
+    this.props.onPressItem(itemId);
   }
 
   render() {
@@ -95,8 +95,10 @@ export default class EventsView extends Component<{}> {
           data={this.state.data}
           renderItem={({ item }) => (
             <EventItem
+              online={true}
               item={item}
-              onPressItem={this.onItemPress.bind(this, item.id)}
+              mAdapter={this.mAdapter}
+              onPressItem={this.onPressItem.bind(this,item.id)}
             />
           )}
           keyExtractor={item => item.id}
