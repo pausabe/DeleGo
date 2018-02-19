@@ -24,13 +24,11 @@ export default class EventItem extends Component {
       introPath += "/";
 
 
-    if(props.online){
-      imageSavedAux = false;
+    if(!props.offline){
       this.position = 'absolute';
 
     }
     else {
-      imageSavedAux = true;
       this.position = 'relative';
     }
 
@@ -40,16 +38,15 @@ export default class EventItem extends Component {
     this.state = {
       opaThumb: new Animated.Value(0),
       opaItem: 0,
-      imageSaved: imageSavedAux
+      imageSaved: props.offline
     }
   }
 
   componentDidMount(){
-    if(this.props.online){
+    if(!this.props.offline){
       //saving image in local storage
       this.props.mAdapter.saveOfflineImage(this.props.item.id,this.props.item.picture.real)
         .then(()=>{
-          console.log("image saved succesfully");
           this.setState({imageSaved:true});
         })
         .catch(error => {
@@ -107,7 +104,7 @@ export default class EventItem extends Component {
               :
               null
             }
-          {this.props.online?
+          {!this.props.offline?
             <Animated.Image
               style={[{opacity:this.state.opaThumb},Styles.eventItemImage]}
               blurRadius={2}

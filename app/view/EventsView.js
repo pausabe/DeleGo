@@ -24,55 +24,70 @@ export default class EventsView extends Component<{}> {
       data: [],
       page: 1,
       error: null,
-      refreshing: false
+      refreshing: false,
     };
+
+    this.itemOffline = [];
+    this.noMorePages = false;
   }
 
   componentDidMount(){
-    this.makeRemoteRequest();
+    this.getEventsData();
   }
 
-  makeRemoteRequest(){
+  getEventsData(){
     console.log("requested page n: "+this.state.page);
     this.mAdapter.getEventsData(this.state.page).then(res=>{
-      console.log("finally!",res);
+      if(res!=="no-page"){
+        var eventsData = res.eventsData;
+        for(i=0;i<eventsData.results.length;i++){
+          this.itemOffline.push(res.offline);
+        }
         this.setState({
-          data: this.state.page === 1 ? res.results : [...this.state.data, ...res.results],
+          data: this.state.page === 1 ? eventsData.results : [...this.state.data, ...eventsData.results],
           error: res.error || null,
           loading: false,
-          refreshing: false
+          refreshing: false,
         });
-      })
-      .catch(error => {
-        console.log("getEventsData Error: ",error);
-        this.setState({ error, loading: false, refreshing: false });
-      });
+      }
+      else{
+        this.noMorePages = true;
+        this.setState({ error: "no-page", loading: false, refreshing: false });
+      }
+    })
+    .catch(error => {
+      console.log("getEventsData Error: ",error);
+      this.setState({ error: error, loading: false, refreshing: false });
+    });
   }
 
   handleRefresh(){
+    this.noMorePages = false;
     this.setState(
       {
         page: 1,
         refreshing: true
       },
       () => {
-        this.makeRemoteRequest();
+        this.getEventsData();
       }
     );
   }
 
   handleLoadMore(){
-    console.log("loading more and more");
-    this.setState(
-      {
-        page: this.state.page + 1,
-        loading: true
-      },
-      () => {
-        this.makeRemoteRequest();
-      }
-    );
-  };
+    if(!this.state.loading && !this.noMorePages){
+      console.log("loading more and more");
+      this.setState(
+        {
+          page: this.state.page + 1,
+          loading: true
+        },
+        () => {
+          this.getEventsData();
+        }
+      );
+    }
+  }
 
   renderFooter(){
     if (!this.state.loading || this.state.refreshing) return null;
@@ -93,9 +108,9 @@ export default class EventsView extends Component<{}> {
       <View style={Styles.eventsListConainer}>
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <EventItem
-              online={true}
+              offline={this.itemOffline[index]}
               item={item}
               mAdapter={this.mAdapter}
               onPressItem={this.onPressItem.bind(this,item.id)}
@@ -106,7 +121,7 @@ export default class EventsView extends Component<{}> {
           onRefresh={this.handleRefresh.bind(this)}
           refreshing={this.state.refreshing}
           onEndReached={this.handleLoadMore.bind(this)}
-          onEndReachedThreshold={0}
+          onEndReachedThreshold={1}
         />
       </View>
     );

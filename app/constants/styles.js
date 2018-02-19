@@ -37,7 +37,7 @@ module.exports = StyleSheet.create({
     marginBottom:10
   },
   eventItemImageContainer:{
-    // backgroundColor:'white'//Colors.tabBackground
+    backgroundColor: Colors.backgroundItemImage
   },
   eventItemImage:{
     resizeMode:"cover",

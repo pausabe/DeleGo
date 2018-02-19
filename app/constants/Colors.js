@@ -6,4 +6,5 @@ module.exports = {
   headerBarBackground: 'rgb(242, 242, 242)',
   tabBackground: 'rgba(242, 242, 242, 0.5)',
   backgroundEventItem: 'white',
+  backgroundItemImage: 'rgb(217, 217, 217)'
 };
