@@ -11,8 +11,8 @@ export default class EventsDAO {
   }
 
   _savePage(pageId){
-    const filepath = this.path+"/offline/aux/page"+pageId+".json";
-    const destPath = this.path+"/offline/page"+pageId+".json";
+    const filepath = this.path+"/local/aux/page"+pageId+".json";
+    const destPath = this.path+"/local/page"+pageId+".json";
 
     var promise = this.RNFS.exists(destPath).then((exists) => {
       console.log("saving page "+pageId);
@@ -34,7 +34,7 @@ export default class EventsDAO {
     var promise = new Promise((resolve, reject) => {
       var promises = [];
       for(i=0;i<pageData.results.length;i++){
-        console.log("descarregant: ",pageData.results[i].picture.thumbnail);
+        console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
         var singleProm = this.RNFS.downloadFile({
           fromUrl:pageData.results[i].picture.thumbnail,
           toFile:this.path+"/thumbnailEvent"+pageData.results[i].id+".jpg"
@@ -46,48 +46,86 @@ export default class EventsDAO {
     return promise;
   }
 
-  getEventsData(pageId){
-    const pagePath = this.path+"/offline/aux/page"+pageId+".json";
+  getEventsData(pageId,internet){
+    var pagePath = this.path+"/local/aux/page"+pageId+".json";
     const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
     var promise = new Promise((resolve, reject) => {
-      this.RNFS.mkdir(this.path+"/offline/aux",{NSURLIsExcludedFromBackupKey:true}).then(() => {
-        this.RNFS.downloadFile({
-          fromUrl:url,
-          toFile:pagePath
-        }).promise.then((res)=>{
-          if(res.statusCode===200){
-            this.RNFS.readFile(pagePath).then(fileData => {
-              resolve(JSON.parse(fileData));
-            });
-          }
-          else if(res.statusCode===404){
-            resolve("no-page");
-          }
-        });
+      this.RNFS.mkdir(this.path+"/local/aux",{NSURLIsExcludedFromBackupKey:true}).then(() => {
+        if(internet){
+          this.RNFS.downloadFile({
+            fromUrl:url,
+            toFile:pagePath
+          }).promise.then((res)=>{
+            if(res.statusCode===200){
+              this.RNFS.readFile(pagePath).then(fileData => {
+                var eventsData = JSON.parse(fileData);
+                this._checkPage(eventsData,pageId).then(local => {
+                  if(local){
+                    resolve({eventsData:eventsData,local:local});
+                  }
+                  else{
+                    this.downloadThumbnails(eventsData).then(()=>{
+                      resolve({eventsData:eventsData,local:local});
+                    });
+                  }
+                });
+              });
+            }
+            else if(res.statusCode===404){
+              resolve("no-page");
+            }
+            else{
+              pagePath = this.path+"/local/aux/page1.json";
+              console.log("download status: ",res.statusCode);
+            }
+          });
+        }
+        else{
+          //I havn't checked this! actually eventsData doesnt exists here
+          this._checkPage(eventsData,pageId).then(local => {
+            if(local){
+              this.RNFS.readFile(pagePath).then(fileData => {
+                var eventsData = JSON.parse(fileData);
+                resolve({eventsData:eventsData,local:true});
+              });
+            }
+            else{
+              resolve({eventsData:null,local:false});
+            }
+          });
+        }
       });
     });
     return promise;
   }
 
-  saveOfflineImage(itemId,imagePath){
+  saveLocalImage(itemId,imagePath){
     var totalProm = new Promise((resolve, reject) => {
-      this.RNFS.mkdir(this.path+"/offline",{NSURLIsExcludedFromBackupKey:true}).then(() => {
-        console.log("descarregant: ",imagePath);
-        var downProm = this.RNFS.downloadFile({
-          fromUrl:imagePath,
-          toFile:this.path+"/offline/imageEvent"+itemId+".jpg"
-        });
-        downProm.promise.then(()=>resolve());
+      var imageDestPath = this.path+"/local/imageEvent"+itemId+".jpg";
+      this.RNFS.exists(imageDestPath).then((exists)=>{
+        if(exists){
+          resolve()
+        }
+        else{
+          this.RNFS.mkdir(this.path+"/local",{NSURLIsExcludedFromBackupKey:true}).then(() => {
+            console.log("descarregant real ("+itemId+"): ",imagePath);
+            var downProm = this.RNFS.downloadFile({
+              fromUrl:imagePath,
+              toFile: imageDestPath
+            });
+            downProm.promise.then(()=>resolve());
+          });
+        }
       });
     });
     return totalProm;
   }
 
-  checkPage(pageData, pageId){
+  _checkPage(pageData, pageId){
     var promise = new Promise((resolve, reject) => {
-      if(pageId > Constants.offlinePages) resolve(false);
+      if(pageId > Constants.localPages) resolve(false);
       else{
-        var pagePath = this.path+"/offline/page"+pageId+".json";
+        var pagePath = this.path+"/local/page"+pageId+".json";
         this.RNFS.exists(pagePath).then((exists) => {
           if(!exists){
             this._savePage(pageId).then(() => resolve(false));

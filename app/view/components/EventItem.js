@@ -24,7 +24,7 @@ export default class EventItem extends Component {
       introPath += "/";
 
 
-    if(!props.offline){
+    if(!props.local){
       this.position = 'absolute';
 
     }
@@ -33,30 +33,29 @@ export default class EventItem extends Component {
     }
 
     this.uriPathThumb = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/thumbnailEvent${props.item.id}.jpg`;
-    this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/offline/imageEvent${props.item.id}.jpg`;
+    this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/imageEvent${props.item.id}.jpg`;
 
     this.state = {
       opaThumb: new Animated.Value(0),
       opaItem: 0,
-      imageSaved: props.offline
+      imageSaved: false
     }
   }
 
   componentDidMount(){
-    if(!this.props.offline){
-      //saving image in local storage
-      this.props.mAdapter.saveOfflineImage(this.props.item.id,this.props.item.picture.real)
-        .then(()=>{
-          this.setState({imageSaved:true});
-        })
-        .catch(error => {
-          this._onError(error);
-        });
-    }
+    //saving image in local storage (id doesnt exists yet)
+    this.props.mAdapter.saveLocalImage(this.props.item.id,this.props.item.picture.real)
+      .then(()=>{
+        console.log("setstate (inside item) 1");
+        this.setState({imageSaved:true});
+      })
+      .catch(error => {
+        console.log("error on saving image", error);
+      });
   }
 
-  _onError(error){
-    console.log("error on loding or saving image", error);
+  _onLoadError(type,error){
+    console.log("error on loading "+type+" image", error);
   }
 
   _onRealLoad(event){
@@ -65,13 +64,15 @@ export default class EventItem extends Component {
     this.realLoaded = true;
 
     if(this.thumbnailLoaded){
+      console.log("setstate animated (inside item) 1");
       Animated.timing(this.state.opaThumb,{
         toValue: 0,
         duration: 250
       }).start()
     }
     else{
-      this.setState({opaItem:1});
+      // console.log("setstate (inside item) 2");
+      // this.setState({opaItem:1});
     }
   }
 
@@ -80,41 +81,44 @@ export default class EventItem extends Component {
 
     if(!this.realLoaded){
       this.thumbnailLoaded = true;
+      console.log("setstate animated (inside item) 2");
       Animated.timing(this.state.opaThumb,{
         toValue: 1,
         duration: 0
       }).start()
     }
+    console.log("setstate (inside item) 3");
     this.setState({opaItem:1});
   }
 
   render(){
+    console.log("rendering item ("+this.props.item.id+"). Local:",this.props.local);
     return(
-      <View style={[{opacity:this.state.opaItem},Styles.eventItemConainer]}>
+      <View style={[{opacity:1},Styles.eventItemConainer]}>
         <TouchableOpacity
           onPress={this.props.onPressItem}>
           <View style={Styles.eventItemImageContainer}>
             {this.state.imageSaved?
               <Animated.Image
                 style={[{position:this.position},Styles.eventItemImage]}
-                source={{isStatic:true, uri:this.uriPathReal}}
-                onError={this._onError.bind(this)}
+                source={{isStatic:true,uri:this.uriPathReal}}
+                onError={this._onLoadError.bind(this,"real")}
                 onLoad={this._onRealLoad.bind(this)}
               />
               :
               null
             }
-          {!this.props.offline?
-            <Animated.Image
-              style={[{opacity:this.state.opaThumb},Styles.eventItemImage]}
-              blurRadius={2}
-              source={{isStatic:true, uri:this.uriPathThumb}}
-              onError={this._onError.bind(this)}
-              onLoad={this._onThumbnailLoad.bind(this)}
-            />
-            :
-            null
-          }
+            {this.props.local && !this.state.imageSaved?
+              <Animated.Image
+                style={[{opacity:this.state.opaThumb},Styles.eventItemImage]}
+                blurRadius={2}
+                source={{isStatic:true, uri:this.uriPathThumb}}
+                onError={this._onLoadError.bind(this,"thumb")}
+                onLoad={this._onThumbnailLoad.bind(this)}
+              />
+              :
+              null
+            }
           </View>
           <View style={Styles.eventItemTextContainer}>
             <Text>
