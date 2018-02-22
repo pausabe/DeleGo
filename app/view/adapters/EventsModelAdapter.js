@@ -9,4 +9,8 @@ export default class EventsModelAdapter {
   saveLocalImage(itemId,imagePath){
     return dataAcc.saveLocalImage(itemId,imagePath);
   }
+
+  checkRealImage(imageId){
+    return dataAcc.checkRealImage(imageId);
+  }
 }

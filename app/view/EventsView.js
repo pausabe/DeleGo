@@ -37,7 +37,7 @@ export default class EventsView extends Component<{}> {
     };
 
     this.page = 0;
-    this.itemLocal = [];
+    this.realImageSaved = [];
     this.noMorePages = false;
   }
 
@@ -52,29 +52,35 @@ export default class EventsView extends Component<{}> {
       console.log("recupered internet connection");
       console.log("setState 7");
       this.setState({internet: connectionInfo.type!=='none'},()=>{
-        if(this.page<=1){
-          //firs refresh
-          this._handleRefresh();
-        }
+        this._handleRefresh();
       });
     }
   }
 
   _getEventsData(){
     console.log("requested page n: "+this.page);
-    this.mAdapter.getEventsData(this.page,this.state.internet).then(res=>{
-      if(res!=="no-page"){
-        var eventsData = res.eventsData;
-        for(i=0;i<eventsData.results.length;i++){
-          this.itemLocal.push(res.local);
+    this.mAdapter.getEventsData(this.page,this.state.internet).then(eventsData=>{
+      if(eventsData!=="no-page"){
+        if(this.realImageSaved.length >= (Constants.eventsPerPage*Constants.localPages)){
+          for(i=0;i<eventsData.results.length;i++){
+            this.realImageSaved.push(false);
+          }
+          this._updateNewData(eventsData.results);
         }
-        console.log("itemLocal",this.itemLocal);
-        console.log("setState 1");
-        this.setState({
-          data: this.page === 1 ? eventsData.results : [...this.state.data, ...eventsData.results],
-          refreshing: false,
-          firstLoad: false
-        });
+        else{
+          var promises = [];
+          for(i=0;i<eventsData.results.length;i++){
+            var singleProm = this.mAdapter.checkRealImage(eventsData.results[i].id);
+            promises.push(singleProm);
+          }
+          Promise.all(promises).then((results) => {
+            console.log("promises results",results);
+            for(i=0;i<results.length;i++){
+              this.realImageSaved.push(results[i]);
+            }
+            this._updateNewData(eventsData.results);
+          });
+        }
       }
       else{
         this.noMorePages = true;
@@ -90,6 +96,17 @@ export default class EventsView extends Component<{}> {
     });
   }
 
+  _updateNewData(eventsData){
+    console.log("this.realImageSaved",this.realImageSaved);
+
+    console.log("setState 1");
+    this.setState({
+      data: this.page === 1 ? eventsData : [...this.state.data, ...eventsData],
+      refreshing: false,
+      firstLoad: false
+    });
+  }
+
   _handleRefresh(){
     console.log("handle refresssssssh!!");
     console.log("setState 4");
@@ -100,27 +117,21 @@ export default class EventsView extends Component<{}> {
       },
       () => {
         this.noMorePages = false;
-        this.itemLocal = [];
+        this.realImageSaved = [];
         this._getEventsData();
       }
     );
   }
 
-  _handleLoadMore(){
-    console.log("handle load more?");
-    if(!this.noMorePages && this.state.internet){
+  _handleLoadMore(data){
+    console.log("they are asking me to load more: ",data.distanceFromEnd);
+    var boolResult = data.distanceFromEnd>parseFloat("-150");
+    console.log("checking... ",boolResult);
+
+    if(!this.noMorePages && this.state.internet && data.distanceFromEnd>parseFloat("-150")){
+      console.log("handle load more");
       this.page +=1;
       this._getEventsData();
-
-      /*console.log("setState 5");
-      this.setState(
-        {
-          page: this.state.page + 1,
-        },
-        () => {
-          this._getEventsData();
-        }
-      );*/
     }
   }
 
@@ -147,6 +158,7 @@ export default class EventsView extends Component<{}> {
   }
 
   render() {
+    console.log("Im rendering in upper view",this.state.data);
     return (
       <View style={Styles.eventsListConainer}>
         {this.state.internet?
@@ -161,8 +173,9 @@ export default class EventsView extends Component<{}> {
             data={this.state.data}
             renderItem={({ item, index }) => (
               <EventItem
-                local={this.itemLocal[index]}
+                realImageSaved={this.realImageSaved[index]}
                 item={item}
+                index={index}
                 mAdapter={this.mAdapter}
                 onPressItem={this.onPressItem.bind(this,item.id)}
               />
@@ -172,7 +185,7 @@ export default class EventsView extends Component<{}> {
             onRefresh={this._handleRefresh.bind(this)}
             refreshing={this.state.refreshing}
             onEndReached={this._handleLoadMore.bind(this)}
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0.01}
           />
         }
       </View>

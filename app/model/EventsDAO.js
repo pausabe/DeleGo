@@ -61,11 +61,11 @@ export default class EventsDAO {
                 var eventsData = JSON.parse(fileData);
                 this._checkPage(eventsData,pageId).then(local => {
                   if(local){
-                    resolve({eventsData:eventsData,local:local});
+                    resolve(eventsData);
                   }
                   else{
                     this.downloadThumbnails(eventsData).then(()=>{
-                      resolve({eventsData:eventsData,local:local});
+                      resolve(eventsData);
                     });
                   }
                 });
@@ -86,11 +86,11 @@ export default class EventsDAO {
             if(local){
               this.RNFS.readFile(pagePath).then(fileData => {
                 var eventsData = JSON.parse(fileData);
-                resolve({eventsData:eventsData,local:true});
+                resolve(eventsData);
               });
             }
             else{
-              resolve({eventsData:null,local:false});
+              resolve(null);
             }
           });
         }
@@ -104,7 +104,7 @@ export default class EventsDAO {
       var imageDestPath = this.path+"/local/imageEvent"+itemId+".jpg";
       this.RNFS.exists(imageDestPath).then((exists)=>{
         if(exists){
-          resolve()
+          resolve(true);
         }
         else{
           this.RNFS.mkdir(this.path+"/local",{NSURLIsExcludedFromBackupKey:true}).then(() => {
@@ -113,7 +113,7 @@ export default class EventsDAO {
               fromUrl:imagePath,
               toFile: imageDestPath
             });
-            downProm.promise.then(()=>resolve());
+            downProm.promise.then(()=>resolve(false));
           });
         }
       });
@@ -145,5 +145,10 @@ export default class EventsDAO {
       }
     });
     return promise;
+  }
+
+  checkRealImage(imageId){
+    var imagePath = this.path+"/local/imageEvent"+imageId+".jpg";
+    return this.RNFS.exists(imagePath);
   }
 }
