@@ -41,7 +41,10 @@ export default class EventsDAO {
         });
         promises.push(singleProm.promise);
       }
-      Promise.all(promises).then(() => resolve());
+      Promise.all(promises).then(() => resolve())
+      .catch((error) => {
+        console.log("downloading thumbnail",error);
+      });
     });
     return promise;
   }
@@ -66,6 +69,9 @@ export default class EventsDAO {
                   else{
                     this.downloadThumbnails(eventsData).then(()=>{
                       resolve(eventsData);
+                    })
+                    .catch((error) => {
+                      console.log("thumbnail downloads",error);
                     });
                   }
                 });
@@ -78,6 +84,9 @@ export default class EventsDAO {
               pagePath = this.path+"/local/aux/page1.json";
               console.log("download status: ",res.statusCode);
             }
+          })
+          .catch((error) => {
+            console.log("Page download",error);
           });
         }
         else{
@@ -95,7 +104,7 @@ export default class EventsDAO {
           });
         }
       });
-    });
+    })
     return promise;
   }
 
@@ -113,7 +122,10 @@ export default class EventsDAO {
               fromUrl:imagePath,
               toFile: imageDestPath
             });
-            downProm.promise.then(()=>resolve(false));
+            downProm.promise.then(()=>resolve(false))
+            .catch((error) => {
+              console.log("download real image",error);
+            });
           });
         }
       });

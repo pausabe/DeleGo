@@ -82,17 +82,14 @@ export default class EventItem extends Component {
 
     this.realLoaded = true;
 
-    // if(this.thumbnailLoaded){
-      Animated.timing(this.state.opaItem,{
-        toValue: 1,
-        duration: 0
-      }).start();
-      console.log("heeeeree sshiiit (thumb)",this.props.item.id);
-      Animated.timing(this.state.opaThumb,{
-        toValue: 0,
-        duration: 250
-      }).start();
-    // }
+    Animated.timing(this.state.opaItem,{
+      toValue: 1,
+      duration: 0
+    }).start();
+    Animated.timing(this.state.opaThumb,{
+      toValue: 0,
+      duration: 250
+    }).start();
   }
 
   _onThumbnailLoad(event){

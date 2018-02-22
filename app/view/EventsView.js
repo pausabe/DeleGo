@@ -39,27 +39,31 @@ export default class EventsView extends Component<{}> {
     this.page = 0;
     this.realImageSaved = [];
     this.noMorePages = false;
+    this.loadingMore = false;
   }
 
   _handleConnectionChange(connectionInfo){
-    console.log("connection get changed:",connectionInfo.type);
+    console.log("Firs load or connection get changed:",connectionInfo.type);
     if(this.state.internet && connectionInfo.type==='none'){
-      console.log("lost internet connection");
+      console.log("Firs load or lost internet connection");
+      this.loadingMore = false;
       console.log("setState 6");
       this.setState({internet: connectionInfo.type!=='none'});
     }
     else if(!this.state.internet && connectionInfo.type!=='none'){
-      console.log("recupered internet connection");
+      console.log("Firs load or recupered internet connection");
       console.log("setState 7");
-      this.setState({internet: connectionInfo.type!=='none'},()=>{
+      this.page = 1;
+      this.setState({data: [],internet: connectionInfo.type!=='none'},()=>{
         this._handleRefresh();
       });
     }
   }
 
   _getEventsData(){
-    console.log("requested page n: "+this.page);
-    this.mAdapter.getEventsData(this.page,this.state.internet).then(eventsData=>{
+    console.log("requested page n: "+this.page+". Internet: "+this.state.internet);
+    this.mAdapter.getEventsData(this.page,this.state.internet).then((eventsData)=>{
+      console.log("data page "+this.page,eventsData);
       if(eventsData!=="no-page"){
         if(this.realImageSaved.length >= (Constants.eventsPerPage*Constants.localPages)){
           for(i=0;i<eventsData.results.length;i++){
@@ -89,7 +93,7 @@ export default class EventsView extends Component<{}> {
         this.setState({ refreshing: false });
       }
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("getEventsData Error: ",error);
       console.log("setState 3");
       this.setState({ refreshing: false });
@@ -104,6 +108,8 @@ export default class EventsView extends Component<{}> {
       data: this.page === 1 ? eventsData : [...this.state.data, ...eventsData],
       refreshing: false,
       firstLoad: false
+    },()=>{
+      this.loadingMore = false;
     });
   }
 
@@ -129,6 +135,7 @@ export default class EventsView extends Component<{}> {
     console.log("checking... ",boolResult);
 
     if(!this.noMorePages && this.state.internet && data.distanceFromEnd>parseFloat("-150")){
+      this.loadingMore = true;
       console.log("handle load more");
       this.page +=1;
       this._getEventsData();
@@ -136,7 +143,7 @@ export default class EventsView extends Component<{}> {
   }
 
   _renderFooter(){
-    if (this.state.refreshing) return null;
+    if(this.state.refreshing) return null;
 
     return (
       <View style={{paddingVertical: 20,}}>
@@ -161,11 +168,6 @@ export default class EventsView extends Component<{}> {
     console.log("Im rendering in upper view",this.state.data);
     return (
       <View style={Styles.eventsListConainer}>
-        {this.state.internet?
-          <Text>hi ha internet</Text>
-          :
-          <Text>NO hi ha internet</Text>
-        }
         {this.state.firstLoad?
           this._firstLoadComponent()
           :
@@ -185,10 +187,16 @@ export default class EventsView extends Component<{}> {
             onRefresh={this._handleRefresh.bind(this)}
             refreshing={this.state.refreshing}
             onEndReached={this._handleLoadMore.bind(this)}
-            onEndReachedThreshold={0.01}
+            onEndReachedThreshold={0.8}
           />
         }
       </View>
     );
   }
 }
+
+/*{this.state.internet?
+  <Text>hi ha internet</Text>
+  :
+  <Text>NO hi ha internet</Text>
+}*/
