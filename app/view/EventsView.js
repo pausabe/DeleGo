@@ -58,13 +58,19 @@ export default class EventsView extends Component<{}> {
         this._handleRefresh();
       });
     }
+    else if(this.state.internet === null && connectionInfo.type==='none'){
+      //first load no internet.. load local data
+      this._handleRefresh();
+    }
   }
 
   _getEventsData(){
-    console.log("requested page n: "+this.page+". Internet: "+this.state.internet);
-    this.mAdapter.getEventsData(this.page,this.state.internet).then((eventsData)=>{
-      console.log("data page "+this.page,eventsData);
-      if(eventsData!=="no-page"){
+    console.log("requested page n: "+this.page);
+    this.mAdapter.getEventsData(this.page,this.state.internet)
+    .then((eventsData)=>{
+      if(eventsData){
+        console.log("data page "+this.page,eventsData);
+
         if(this.realImageSaved.length >= (Constants.eventsPerPage*Constants.localPages)){
           for(i=0;i<eventsData.results.length;i++){
             this.realImageSaved.push(false);
@@ -87,16 +93,21 @@ export default class EventsView extends Component<{}> {
         }
       }
       else{
+        //No internet connection and no local data
+        console.log("No internet connection and no local data");
+      }
+    })
+    .catch((error) => {
+      console.log("getEventsData Error: ",error);
+      if(error === 'no-page'){
         this.noMorePages = true;
         console.log("setState 2");
         this.page -= 1;
         this.setState({ refreshing: false });
       }
-    })
-    .catch((error) => {
-      console.log("getEventsData Error: ",error);
-      console.log("setState 3");
-      this.setState({ refreshing: false });
+      else{
+        this.setState({ internet: false, refreshing: false });
+      }
     });
   }
 
@@ -143,7 +154,7 @@ export default class EventsView extends Component<{}> {
   }
 
   _renderFooter(){
-    if(this.state.refreshing) return null;
+    if(this.state.refreshing || !this.state.internet || this.noMorePages) return null;
 
     return (
       <View style={{paddingVertical: 20,}}>
@@ -168,6 +179,11 @@ export default class EventsView extends Component<{}> {
     console.log("Im rendering in upper view",this.state.data);
     return (
       <View style={Styles.eventsListConainer}>
+        {this.state.internet?
+          <Text>hi ha internet</Text>
+          :
+          <Text>NO hi ha internet</Text>
+        }
         {this.state.firstLoad?
           this._firstLoadComponent()
           :
@@ -194,9 +210,3 @@ export default class EventsView extends Component<{}> {
     );
   }
 }
-
-/*{this.state.internet?
-  <Text>hi ha internet</Text>
-  :
-  <Text>NO hi ha internet</Text>
-}*/

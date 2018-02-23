@@ -31,132 +31,127 @@ export default class EventsDAO {
   }
 
   downloadThumbnails(pageData){
-    var promise = new Promise((resolve, reject) => {
-      var promises = [];
-      for(i=0;i<pageData.results.length;i++){
-        console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
-        var singleProm = this.RNFS.downloadFile({
-          fromUrl:pageData.results[i].picture.thumbnail,
-          toFile:this.path+"/thumbnailEvent"+pageData.results[i].id+".jpg"
-        });
-        promises.push(singleProm.promise);
-      }
-      Promise.all(promises).then(() => resolve())
-      .catch((error) => {
-        console.log("downloading thumbnail",error);
+    var promises = [];
+    for(i=0;i<pageData.results.length;i++){
+      console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
+      var singleProm = this.RNFS.downloadFile({
+        fromUrl:pageData.results[i].picture.thumbnail,
+        toFile:this.path+"/thumbnailEvent"+pageData.results[i].id+".jpg"
       });
+      promises.push(singleProm.promise);
+    }
+    return Promise.all(promises)
+    .then(() => {
+      return pageData;
     });
-    return promise;
   }
 
   getEventsData(pageId,internet){
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
+    var pagePathSaved = this.path+"/local/page"+pageId+".json";
     const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
-    var promise = new Promise((resolve, reject) => {
-      this.RNFS.mkdir(this.path+"/local/aux",{NSURLIsExcludedFromBackupKey:true}).then(() => {
-        if(internet){
-          this.RNFS.downloadFile({
+
+    if(internet){
+      return this.RNFS.mkdir(this.path+"/local/aux",{NSURLIsExcludedFromBackupKey:true})
+      .then(() => {
+          return this.RNFS.downloadFile({
             fromUrl:url,
             toFile:pagePath
-          }).promise.then((res)=>{
-            if(res.statusCode===200){
-              this.RNFS.readFile(pagePath).then(fileData => {
-                var eventsData = JSON.parse(fileData);
-                this._checkPage(eventsData,pageId).then(local => {
-                  if(local){
-                    resolve(eventsData);
-                  }
-                  else{
-                    this.downloadThumbnails(eventsData).then(()=>{
-                      resolve(eventsData);
-                    })
-                    .catch((error) => {
-                      console.log("thumbnail downloads",error);
-                    });
-                  }
-                });
-              });
-            }
-            else if(res.statusCode===404){
-              resolve("no-page");
-            }
-            else{
-              pagePath = this.path+"/local/aux/page1.json";
-              console.log("download status: ",res.statusCode);
-            }
-          })
-          .catch((error) => {
-            console.log("Page download",error);
-          });
+          }).promise;
+        })
+      .then((res)=>{
+        if(res.statusCode===200){
+          return this.RNFS.readFile(pagePath);
         }
         else{
-          //I havn't checked this! actually eventsData doesnt exists here
-          this._checkPage(eventsData,pageId).then(local => {
-            if(local){
-              this.RNFS.readFile(pagePath).then(fileData => {
-                var eventsData = JSON.parse(fileData);
-                resolve(eventsData);
-              });
-            }
-            else{
-              resolve(null);
-            }
-          });
+          throw 'no-page';
         }
+      })
+      .then(fileData => {
+        var eventsData = JSON.parse(fileData);
+        return this._checkPage(eventsData,pageId);
+      })
+      .then(checkRes => {
+        console.log("checkRes",checkRes);
+        if(checkRes.local){
+          return checkRes.eventsData;
+        }
+        else{
+          return this.downloadThumbnails(checkRes.eventsData);
+        }
+      })
+      .then((eventsData)=>{
+        return eventsData;
       });
-    })
-    return promise;
+    }
+    else if(pageId <= Constants.localPages){
+      console.log("handling no internet but maybe local data");
+      return this.RNFS.exists(pagePathSaved)
+      .then((exists)=>{
+        if(exists) return this.RNFS.readFile(pagePathSaved);
+        else return false;
+      })
+      .then((fileData) => {
+        if(fileData) return JSON.parse(fileData);
+        return false;
+      });
+    }
   }
 
   saveLocalImage(itemId,imagePath){
-    var totalProm = new Promise((resolve, reject) => {
-      var imageDestPath = this.path+"/local/imageEvent"+itemId+".jpg";
-      this.RNFS.exists(imageDestPath).then((exists)=>{
-        if(exists){
-          resolve(true);
-        }
-        else{
-          this.RNFS.mkdir(this.path+"/local",{NSURLIsExcludedFromBackupKey:true}).then(() => {
-            console.log("descarregant real ("+itemId+"): ",imagePath);
-            var downProm = this.RNFS.downloadFile({
-              fromUrl:imagePath,
-              toFile: imageDestPath
-            });
-            downProm.promise.then(()=>resolve(false))
-            .catch((error) => {
-              console.log("download real image",error);
-            });
-          });
-        }
-      });
+    var imageDestPath = this.path+"/local/imageEvent"+itemId+".jpg";
+
+    return this.RNFS.exists(imageDestPath)
+    .then((exists)=>{
+      if(!exists){
+        return this.RNFS.mkdir(this.path+"/local",{NSURLIsExcludedFromBackupKey:true});
+      }
+    })
+    .then(() => {
+      console.log("descarregant real ("+itemId+"): ",imagePath);
+      return this.RNFS.downloadFile({
+        fromUrl:imagePath,
+        toFile: imageDestPath
+      }).promise;
+    })
+    .then(() => {
+      return false;
     });
-    return totalProm;
   }
 
   _checkPage(pageData, pageId){
-    var promise = new Promise((resolve, reject) => {
-      if(pageId > Constants.localPages) resolve(false);
-      else{
-        var pagePath = this.path+"/local/page"+pageId+".json";
-        this.RNFS.exists(pagePath).then((exists) => {
-          if(!exists){
-            this._savePage(pageId).then(() => resolve(false));
+    if(pageId > Constants.localPages) return {local:false,eventsData:pageData};
+    else{
+      var pagePath = this.path+"/local/page"+pageId+".json";
+      return this.RNFS.exists(pagePath)
+      .then((exists) => {
+        auxExists = exists;
+        if(!exists){
+          return this._savePage(pageId);
+        }
+        else{
+          return this.RNFS.readFile(pagePath);
+        }
+      })
+      .then((fileData) => {
+        if(auxExists){
+          fileJSON = JSON.parse(fileData);
+          if(JSON.stringify(fileJSON)!==JSON.stringify(pageData)){
+            return this._savePage(pageId)
           }
           else{
-            this.RNFS.readFile(pagePath).then(fileData => {
-              fileJSON = JSON.parse(fileData);
-              if(JSON.stringify(fileJSON)!==JSON.stringify(pageData)){
-                this._savePage(pageId).then(() => resolve(false));
-              }
-              else{
-                resolve(true);
-              }
-            });
+            return {local:true,eventsData:pageData};
           }
-        });
-      }
-    });
-    return promise;
+        }
+        else{
+          return {local:false,eventsData:pageData};
+        }
+      })
+      .then((res) => {
+        if(res) return {local:res.local,eventsData:res.eventsData};
+        return {local:false,eventsData:pageData};
+      });
+    }
   }
 
   checkRealImage(imageId){
