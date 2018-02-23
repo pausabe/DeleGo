@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {View, Text, TouchableOpacity} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from "react-navigation";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -23,6 +24,17 @@ const EventsStack = StackNavigator({
         let iconName;
         iconName = `ios-calendar${focused ? '' : '-outline'}`;
         return <Ionicons name={iconName} size={25} color={tintColor} />;
+      },
+      tabBarOnPress: (values) => {
+        const { previousScene, scene, jumpToIndex } = values;
+
+        // console.log("scene",scene);
+
+        if(scene.focused){
+          scene.route.routes[0].params.scrollToTop();
+        }
+
+        jumpToIndex(scene.route.index);
       },
     },
   },

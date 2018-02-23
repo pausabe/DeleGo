@@ -10,6 +10,7 @@ export default class EventsController extends Component<{}> {
     return (
       <EventsView
         onPressItem={this.onPressItem.bind(this)}
+        navigation={this.props.navigation}
       />
     );
   }

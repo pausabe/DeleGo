@@ -7,7 +7,8 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
-  NetInfo
+  NetInfo,
+  RefreshControl
 } from 'react-native';
 
 import ModelAdapter from "./adapters/EventsModelAdapter";
@@ -16,6 +17,12 @@ import Styles from '../constants/Styles';
 import Constants from '../constants/Constants';
 
 export default class EventsView extends Component<{}> {
+  componentWillMount() {
+    this.props.navigation.setParams({
+      scrollToTop: this._onPressGoToTop.bind(this),
+    });
+  }
+
   componentDidMount(){
     NetInfo.addEventListener('connectionChange',this._handleConnectionChange.bind(this));
   }
@@ -40,6 +47,7 @@ export default class EventsView extends Component<{}> {
     this.realImageSaved = [];
     this.noMorePages = false;
     this.loadingMore = false;
+    this.hasScroll = false;
   }
 
   _handleConnectionChange(connectionInfo){
@@ -134,6 +142,7 @@ export default class EventsView extends Component<{}> {
       },
       () => {
         this.noMorePages = false;
+        this.hasScroll = false;
         this.realImageSaved = [];
         this._getEventsData();
       }
@@ -167,6 +176,30 @@ export default class EventsView extends Component<{}> {
     this.props.onPressItem(itemId);
   }
 
+  _handleOnScroll(e){
+    var offset = e.nativeEvent.contentOffset.y;
+    if(!this.hasScroll && offset>0){
+      this.hasScroll = true;
+    }
+    else if(this.hasScroll && offset === 0){
+      this.hasScroll = false;
+    }
+  }
+
+  _onPressGoToTop(){
+    if(!this.state.refreshing){
+      if(this.hasScroll){
+        console.log("SCROLL INFO: scroll to top");
+        this.flatListRef.scrollToOffset({index: 0});
+      }
+      else{
+        console.log("SCROLL INFO: refresh (no scroll top nop)");
+        this._handleRefresh();
+      }
+      this.hasScroll = false;
+    }
+  }
+
   _firstLoadComponent(){
     return(
       <View>
@@ -184,10 +217,16 @@ export default class EventsView extends Component<{}> {
           :
           <Text>NO hi ha internet</Text>
         }
+        {this.state.refreshing?
+          <Text>refreshing...</Text>
+          :
+          null
+        }
         {this.state.firstLoad?
           this._firstLoadComponent()
           :
           <FlatList
+            ref={(ref) => { this.flatListRef = ref; }}
             data={this.state.data}
             renderItem={({ item, index }) => (
               <EventItem
@@ -198,10 +237,19 @@ export default class EventsView extends Component<{}> {
                 onPressItem={this.onPressItem.bind(this,item.id)}
               />
             )}
+            onScroll={this._handleOnScroll.bind(this)}
             keyExtractor={item => item.id}
             ListFooterComponent={this._renderFooter.bind(this)}
-            onRefresh={this._handleRefresh.bind(this)}
-            refreshing={this.state.refreshing}
+            // onRefresh={this._handleRefresh.bind(this)}
+            // refreshing={this.state.refreshing}
+            refreshControl={
+               <RefreshControl
+                   refreshing={this.state.refreshing}
+                   onRefresh={this._handleRefresh.bind(this)}
+                   tintColor="#000"
+                   titleColor="#000"
+                />
+             }
             onEndReached={this._handleLoadMore.bind(this)}
             onEndReachedThreshold={0.8}
           />
@@ -210,3 +258,12 @@ export default class EventsView extends Component<{}> {
     );
   }
 }
+
+/*onViewableItemsChanged={({ viewableItems, changed }) => {
+    console.log("Visible items are", viewableItems);
+    console.log("Changed in this iteration", changed);
+  }}*/
+
+/*getItemLayout={(data, index) => (
+  { length: 50, offset: 50 * index, index }
+)}*/
