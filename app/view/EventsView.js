@@ -79,7 +79,9 @@ export default class EventsView extends Component<{}> {
       if(eventsData){
         console.log("data page "+this.page,eventsData);
 
-        if(this.realImageSaved.length >= (Constants.eventsPerPage*Constants.localPages)){
+        this._updateNewData(eventsData.results);
+
+        /*if(this.realImageSaved.length >= (Constants.eventsPerPage*Constants.localPages)){
           for(i=0;i<eventsData.results.length;i++){
             this.realImageSaved.push(false);
           }
@@ -98,7 +100,7 @@ export default class EventsView extends Component<{}> {
             }
             this._updateNewData(eventsData.results);
           });
-        }
+        }*/
       }
       else{
         //No internet connection and no local data
@@ -141,12 +143,29 @@ export default class EventsView extends Component<{}> {
         refreshing: true
       },
       () => {
-        this.noMorePages = false;
-        this.hasScroll = false;
-        this.realImageSaved = [];
-        this._getEventsData();
+        if(this.state.internet){
+          this._handleRefreshBeforeGetEvents();
+        }
+        else{
+          NetInfo.isConnected.fetch().then(isConnected => {
+            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
+            if(isConnected){
+              this._handleRefreshBeforeGetEvents();
+            }
+            else{
+              this.setState({refreshing: false});
+            }
+          });
+        }
       }
     );
+  }
+
+  _handleRefreshBeforeGetEvents(){
+    this.noMorePages = false;
+    this.hasScroll = false;
+    this.realImageSaved = [];
+    this._getEventsData();
   }
 
   _handleLoadMore(data){
@@ -193,8 +212,9 @@ export default class EventsView extends Component<{}> {
         this.flatListRef.scrollToOffset({index: 0});
       }
       else{
-        console.log("SCROLL INFO: refresh (no scroll top nop)");
-        this._handleRefresh();
+        //in a future I wish I could handle refresh here, but there is a bug and no always works (see trello)
+        /*console.log("SCROLL INFO: refresh (no scroll top nop)");
+        this._handleRefresh();*/
       }
       this.hasScroll = false;
     }
@@ -240,16 +260,8 @@ export default class EventsView extends Component<{}> {
             onScroll={this._handleOnScroll.bind(this)}
             keyExtractor={item => item.id}
             ListFooterComponent={this._renderFooter.bind(this)}
-            // onRefresh={this._handleRefresh.bind(this)}
-            // refreshing={this.state.refreshing}
-            refreshControl={
-               <RefreshControl
-                   refreshing={this.state.refreshing}
-                   onRefresh={this._handleRefresh.bind(this)}
-                   tintColor="#000"
-                   titleColor="#000"
-                />
-             }
+            onRefresh={this._handleRefresh.bind(this)}
+            refreshing={this.state.refreshing}
             onEndReached={this._handleLoadMore.bind(this)}
             onEndReachedThreshold={0.8}
           />
@@ -258,6 +270,17 @@ export default class EventsView extends Component<{}> {
     );
   }
 }
+
+/*comentant onRefresh i refreshing:
+refreshControl={
+   <RefreshControl
+       refreshing={this.state.refreshing}
+       onRefresh={this._handleRefresh.bind(this)}
+       tintColor="#000"
+       titleColor="#000"
+    />
+ }
+ */
 
 /*onViewableItemsChanged={({ viewableItems, changed }) => {
     console.log("Visible items are", viewableItems);

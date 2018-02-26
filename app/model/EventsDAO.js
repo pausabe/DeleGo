@@ -30,10 +30,45 @@ export default class EventsDAO {
     return promise;
   }
 
+  _checkPage(pageData, pageId){
+    if(pageId > Constants.localPages) return {local:false,eventsData:pageData};
+    else{
+      var pagePath = this.path+"/local/page"+pageId+".json";
+      return this.RNFS.exists(pagePath)
+      .then((exists) => {
+        auxExists = exists;
+        if(!exists){
+          return this._savePage(pageId);
+        }
+        else{
+          return this.RNFS.readFile(pagePath);
+        }
+      })
+      .then((fileData) => {
+        if(auxExists){
+          fileJSON = JSON.parse(fileData);
+          if(JSON.stringify(fileJSON)!==JSON.stringify(pageData)){
+            return this._savePage(pageId)
+          }
+          else{
+            return {local:true,eventsData:pageData};
+          }
+        }
+        else{
+          return {local:false,eventsData:pageData};
+        }
+      })
+      .then((res) => {
+        if(res) return {local:res.local,eventsData:res.eventsData};
+        return {local:false,eventsData:pageData};
+      });
+    }
+  }
+
   downloadThumbnails(pageData){
     var promises = [];
     for(i=0;i<pageData.results.length;i++){
-      console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
+      // console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
       var singleProm = this.RNFS.downloadFile({
         fromUrl:pageData.results[i].picture.thumbnail,
         toFile:this.path+"/thumbnailEvent"+pageData.results[i].id+".jpg"
@@ -98,64 +133,76 @@ export default class EventsDAO {
     }
   }
 
-  saveLocalImage(itemId,imagePath){
-    var imageDestPath = this.path+"/local/imageEvent"+itemId+".jpg";
+  saveLocalImage(itemId,imagePath,flatIndex){
+    var imageDestPath = this.path+"/local/images/"+flatIndex+"-image-"+itemId+".jpg";
 
-    return this.RNFS.exists(imageDestPath)
-    .then((exists)=>{
-      if(!exists){
-        return this.RNFS.mkdir(this.path+"/local",{NSURLIsExcludedFromBackupKey:true});
+    return this.RNFS.mkdir(this.path+"/local/images",{NSURLIsExcludedFromBackupKey:true})
+    .then(() => {
+      return this._fileExistsInFolder("image-"+itemId+".jpg",this.path+"/local/images/",flatIndex);
+    })
+    .then((exists) => {
+      console.log("exists",exists);
+      if(!exists.bool){
+        console.log("descarregant real ("+itemId+"): ",imagePath);
+        if(exists.deleteId !== -1){
+          this.RNFS.unlink(this.path+"/local/images/"+flatIndex+"-image-"+exists.deleteId+".jpg");
+        }
+        return this.RNFS.downloadFile({
+          fromUrl:imagePath,
+          toFile: imageDestPath
+        }).promise;
       }
-    })
-    .then(() => {
-      console.log("descarregant real ("+itemId+"): ",imagePath);
-      return this.RNFS.downloadFile({
-        fromUrl:imagePath,
-        toFile: imageDestPath
-      }).promise;
-    })
-    .then(() => {
-      return false;
     });
   }
 
-  _checkPage(pageData, pageId){
-    if(pageId > Constants.localPages) return {local:false,eventsData:pageData};
-    else{
-      var pagePath = this.path+"/local/page"+pageId+".json";
-      return this.RNFS.exists(pagePath)
-      .then((exists) => {
-        auxExists = exists;
-        if(!exists){
-          return this._savePage(pageId);
-        }
-        else{
-          return this.RNFS.readFile(pagePath);
-        }
-      })
-      .then((fileData) => {
-        if(auxExists){
-          fileJSON = JSON.parse(fileData);
-          if(JSON.stringify(fileJSON)!==JSON.stringify(pageData)){
-            return this._savePage(pageId)
-          }
-          else{
-            return {local:true,eventsData:pageData};
-          }
-        }
-        else{
-          return {local:false,eventsData:pageData};
-        }
-      })
-      .then((res) => {
-        if(res) return {local:res.local,eventsData:res.eventsData};
-        return {local:false,eventsData:pageData};
-      });
-    }
+  checkRealImage(imageId,flatIndex){
+    var imagesFolderPath = this.path+"/local/images/";
+    var imageFuturePath = imagesFolderPath+flatIndex+"-image-"+imageId+".jpg";
+    return this.RNFS.exists(imagesFolderPath) //existeix la carpeta d'imatges?
+    .then(dirExists => {
+      if(dirExists){
+        return this.RNFS.exists(imageFuturePath) //existeix la image coincidint index i id?
+        .then((imageExists) => {
+          if(!imageExists) return this._fileExistsInFolder("image-"+imageId+".jpg", imagesFolderPath,flatIndex); //existeix la imatge amb un index diferent?
+          return {index: flatIndex, bool: true};
+        })
+      }
+      return {index: null, bool: false};
+    })
+    .then((imageExists) => {
+      console.log("imageExists",imageExists);
+      if(imageExists.bool && imageExists.index !== flatIndex){
+        var imageActualPath = imagesFolderPath+imageExists.index+"-image-"+imageId+".jpg";
+        console.log("image exists but with diferent index: ",imageActualPath);
+        return this.RNFS.copyFile(imageActualPath,imageFuturePath)
+        .then(() => {
+          var deleteImage = imagesFolderPath+flatIndex+"-image-"+imageId+".jpg";
+          console.log("eliminant:"+deleteImage);
+          this.RNFS.unlink(deleteImage);
+          return true;
+        })
+      }
+      return imageExists.bool;
+    })
   }
 
-  checkRealImage(imageId){
-    var imagePath = this.path+"/local/imageEvent"+imageId+".jpg";
-    return this.RNFS.exists(imagePath);
+  _fileExistsInFolder(fileName,folderPath,flatIndex){
+    return this.RNFS.readdir(folderPath)
+    .then((res)=>{
+      var exists=false;
+      var deleteId = -1;
+      for(i=0;i<res.length && !exists;i++){
+        var auxFileName = res[i].split("-")[1] + ".jpg";
+        var auxIndex = parseInt(res[i].split("-")[0]);
+        var auxId = parseInt(res[i].split("-")[2].split(".")[0]);
+        console.log("flatIndex",flatIndex);
+        console.log("auxIndex",auxIndex);
+        console.log("auxId",auxId);
+        if(flatIndex === auxIndex) deleteId = auxId;
+        if(auxFileName === fileName) return {index: auxIndex, bool: true};
+      }
+      return {index: deleteId, bool: false, deleteId: deleteId};
+    });
   }
+
 }

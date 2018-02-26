@@ -25,52 +25,59 @@ export default class EventItem extends Component {
     if(Platform.OS==='ios')
       introPath += "/";
 
-
-    if(props.realImageSaved){
+    /*if(props.realImageSaved){
       auxPos = 'relative';
       auxOpaItem = 1;
     }
     else {
       auxPos = 'absolute';
       auxOpaItem = 0;
-    }
+    }*/
 
     this.uriPathThumb = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/thumbnailEvent${props.item.id}.jpg`;
-    this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/imageEvent${props.item.id}.jpg`;
+    this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/images/${props.index}-image-${props.item.id}.jpg`;
 
     this.state = {
       opaThumb: new Animated.Value(0),
-      opaItem: new Animated.Value(auxOpaItem),
-      needThumb: !props.realImageSaved,
-      realImageSaved: props.realImageSaved,
-      realPosition: auxPos,
+      opaItem: new Animated.Value(1),//auxOpaItem),
+      needThumb: true,//!props.realImageSaved,
+      realImageSaved: false,//props.realImageSaved,
+      realPosition: 'relative'//auxPos,
     }
   }
 
   componentDidMount(){
-    if(!this.props.realImageSaved && !this.imageOverLocal){
-      //saving image in local storage
-      this.props.mAdapter.saveLocalImage(this.props.item.id,this.props.item.picture.real)
-      .then((alreadySaved)=>{
-        console.log("setstate (inside item) 1");
-        Animated.timing(this.state.opaItem,{
-          toValue: 1,
-          duration: 0
-        }).start();
-        if(alreadySaved){
-          //with actual changes, neger should go here
-          console.log("never here");
-          this.setState({realImageSaved:true,needThumb:false,realPosition:'relative'});
+    if(!this.imageOverLocal){
+      this.props.mAdapter.checkRealImage(this.props.id,this.props.index)
+      .then((realImageSaved) => {
+        if(!realImageSaved){
+          //saving image in local storage
+          this.props.mAdapter.saveLocalImage(this.props.item.id,this.props.item.picture.real,this.props.index)
+          .then(()=>{
+            // console.log("setstate (inside item) 1");
+            /*Animated.timing(this.state.opaItem,{
+              toValue: 1,
+              duration: 0
+            }).start();*/
+            this._showRealImage();
+          })
+          .catch(error => {
+            console.log("error on saving image", error);
+          });
         }
         else{
-          this.setState({realImageSaved:true,needThumb:true,realPosition:'absolute'});
+          this._showRealImage();
         }
-
-      })
-      .catch(error => {
-        console.log("error on saving image", error);
       });
     }
+  }
+
+  _showRealImage(){
+    this.setState({
+      realImageSaved:true,
+      needThumb:false,
+      realPosition:'absolute'
+    });
   }
 
   _onLoadError(type,error){
@@ -78,7 +85,7 @@ export default class EventItem extends Component {
   }
 
   _onRealLoad(event){
-    console.log("real "+this.props.item.id+" loaded. thumb loaded? "+this.thumbnailLoaded);
+    // console.log("real "+this.props.item.id+" loaded. thumb loaded? "+this.thumbnailLoaded);
 
     this.realLoaded = true;
 
@@ -93,7 +100,7 @@ export default class EventItem extends Component {
   }
 
   _onThumbnailLoad(event){
-    console.log("thumb "+this.props.item.id+" loaded. real loaded? "+this.realLoaded);
+    // console.log("thumb "+this.props.item.id+" loaded. real loaded? "+this.realLoaded);
 
     if(!this.props.realImageSaved && !this.realLoaded){
       this.thumbnailLoaded = true;
@@ -101,7 +108,7 @@ export default class EventItem extends Component {
         toValue: 1,
         duration: 0
       }).start();
-      console.log("heeeeree sshiiit (real)",this.props.item.id);
+      // console.log("heeeeree sshiiit (real)",this.props.item.id);
       Animated.timing(this.state.opaThumb,{
         toValue: 1,
         duration: 0
@@ -110,7 +117,7 @@ export default class EventItem extends Component {
   }
 
   render(){
-    console.log("SUPER RENDER ADVISE",this.props.realImageSaved);
+    // console.log("SUPER RENDER ADVISE",this.props.realImageSaved);
 
     renderType = ""
 
@@ -123,7 +130,7 @@ export default class EventItem extends Component {
       if(this.state.needThumb) renderType += "| thumb";
     }
 
-    console.log("rendering item ("+this.props.item.id+") - "+renderType+". Container Opacity: "+this.state.opaItem._value);
+    // console.log("rendering item ("+this.props.item.id+") - "+renderType+". Container Opacity: "+this.state.opaItem._value);
 
     return(
       <Animated.View style={[{opacity:this.state.opaItem},Styles.eventItemConainer]}>
