@@ -25,59 +25,45 @@ export default class EventItem extends Component {
     if(Platform.OS==='ios')
       introPath += "/";
 
-    /*if(props.realImageSaved){
+    if(props.realImageSaved){
       auxPos = 'relative';
       auxOpaItem = 1;
     }
     else {
       auxPos = 'absolute';
       auxOpaItem = 0;
-    }*/
+    }
 
     this.uriPathThumb = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/thumbnailEvent${props.item.id}.jpg`;
-    this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/images/${props.index}-image-${props.item.id}.jpg`;
+    // this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/images/${props.index}-image-${props.item.id}.jpg`;
+    this.uriPathReal = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/images/image-${props.item.id}.jpg`;
 
     this.state = {
       opaThumb: new Animated.Value(0),
-      opaItem: new Animated.Value(1),//auxOpaItem),
-      needThumb: true,//!props.realImageSaved,
-      realImageSaved: false,//props.realImageSaved,
-      realPosition: 'relative'//auxPos,
+      opaItem: new Animated.Value(auxOpaItem),
+      needThumb: !props.realImageSaved,
+      realImageSaved: props.realImageSaved,
+      realPosition: auxPos,
     }
   }
 
   componentDidMount(){
-    if(!this.imageOverLocal){
-      this.props.mAdapter.checkRealImage(this.props.id,this.props.index)
-      .then((realImageSaved) => {
-        if(!realImageSaved){
-          //saving image in local storage
-          this.props.mAdapter.saveLocalImage(this.props.item.id,this.props.item.picture.real,this.props.index)
-          .then(()=>{
-            // console.log("setstate (inside item) 1");
-            /*Animated.timing(this.state.opaItem,{
-              toValue: 1,
-              duration: 0
-            }).start();*/
-            this._showRealImage();
-          })
-          .catch(error => {
-            console.log("error on saving image", error);
-          });
-        }
-        else{
-          this._showRealImage();
-        }
+    if(!this.props.realImageSaved && !this.imageOverLocal){
+      this.props.mAdapter.saveLocalImage(this.props.item.id,this.props.item.picture.real)
+      .then(()=>{
+        Animated.timing(this.state.opaItem,{
+          toValue: 1,
+          duration: 0
+        }).start();
+        this.setState({
+          realImageSaved: true,
+          realPosition: 'absolute'
+        });
+      })
+      .catch(error => {
+        console.log("error on saving image", error);
       });
     }
-  }
-
-  _showRealImage(){
-    this.setState({
-      realImageSaved:true,
-      needThumb:false,
-      realPosition:'absolute'
-    });
   }
 
   _onLoadError(type,error){

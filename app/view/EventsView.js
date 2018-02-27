@@ -44,7 +44,7 @@ export default class EventsView extends Component<{}> {
     };
 
     this.page = 0;
-    this.realImageSaved = [];
+    this.realImageSaved = {};
     this.noMorePages = false;
     this.loadingMore = false;
     this.hasScroll = false;
@@ -75,32 +75,22 @@ export default class EventsView extends Component<{}> {
   _getEventsData(){
     console.log("requested page n: "+this.page);
     this.mAdapter.getEventsData(this.page,this.state.internet)
-    .then((eventsData)=>{
-      if(eventsData){
-        console.log("data page "+this.page,eventsData);
+    .then((res)=>{
+      if(res){
+        console.log("data page "+this.page,res);
 
-        this._updateNewData(eventsData.results);
-
-        /*if(this.realImageSaved.length >= (Constants.eventsPerPage*Constants.localPages)){
-          for(i=0;i<eventsData.results.length;i++){
-            this.realImageSaved.push(false);
+        for(var key in res.realImageSaved){
+          if(res.realImageSaved.hasOwnProperty(key)){
+            // console.log(key + " -> " + res.realImageSaved[key]);
+            this.realImageSaved[key] = res.realImageSaved[key]
           }
-          this._updateNewData(eventsData.results);
         }
-        else{
-          var promises = [];
-          for(i=0;i<eventsData.results.length;i++){
-            var singleProm = this.mAdapter.checkRealImage(eventsData.results[i].id);
-            promises.push(singleProm);
-          }
-          Promise.all(promises).then((results) => {
-            console.log("promises results",results);
-            for(i=0;i<results.length;i++){
-              this.realImageSaved.push(results[i]);
-            }
-            this._updateNewData(eventsData.results);
-          });
+
+
+        /*for(i=0;i<res.eventsData.results.length;i++){
+          this.realImageSaved.push(res.realImageSaved[i]);
         }*/
+        this._updateNewData(res.eventsData.results);
       }
       else{
         //No internet connection and no local data
@@ -143,10 +133,10 @@ export default class EventsView extends Component<{}> {
         refreshing: true
       },
       () => {
-        if(this.state.internet){
+        // if(this.state.internet){
           this._handleRefreshBeforeGetEvents();
-        }
-        else{
+        // }
+        /*else{
           NetInfo.isConnected.fetch().then(isConnected => {
             console.log('First, is ' + (isConnected ? 'online' : 'offline'));
             if(isConnected){
@@ -156,7 +146,7 @@ export default class EventsView extends Component<{}> {
               this.setState({refreshing: false});
             }
           });
-        }
+        }*/
       }
     );
   }
@@ -164,7 +154,7 @@ export default class EventsView extends Component<{}> {
   _handleRefreshBeforeGetEvents(){
     this.noMorePages = false;
     this.hasScroll = false;
-    this.realImageSaved = [];
+    this.realImageSaved = {};
     this._getEventsData();
   }
 
@@ -229,7 +219,6 @@ export default class EventsView extends Component<{}> {
   }
 
   render() {
-    console.log("Im rendering in upper view",this.state.data);
     return (
       <View style={Styles.eventsListConainer}>
         {this.state.internet?
@@ -250,7 +239,7 @@ export default class EventsView extends Component<{}> {
             data={this.state.data}
             renderItem={({ item, index }) => (
               <EventItem
-                realImageSaved={this.realImageSaved[index]}
+                realImageSaved={this.realImageSaved[item.id]}
                 item={item}
                 index={index}
                 mAdapter={this.mAdapter}

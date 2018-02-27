@@ -89,11 +89,11 @@ export default class EventsDAO {
     if(internet){
       return this.RNFS.mkdir(this.path+"/local/aux",{NSURLIsExcludedFromBackupKey:true})
       .then(() => {
-          return this.RNFS.downloadFile({
-            fromUrl:url,
-            toFile:pagePath
-          }).promise;
-        })
+        return this.RNFS.downloadFile({
+          fromUrl:url,
+          toFile:pagePath
+        }).promise;
+      })
       .then((res)=>{
         if(res.statusCode===200){
           return this.RNFS.readFile(pagePath);
@@ -116,7 +116,38 @@ export default class EventsDAO {
         }
       })
       .then((eventsData)=>{
-        return eventsData;
+        var newIds = [];
+        for(i=0;i<eventsData.results.length;i++){
+          newIds.push(parseInt(eventsData.results[i].id));
+        }
+        var falseReturn = {};
+        for(i=0;i<newIds.length;i++){
+          falseReturn[newIds[i]] = false;
+        }
+        if(pageId > Constants.localPages) {
+          return {eventsData: eventsData, realImageSaved: falseReturn};
+        }
+        else {
+          return this._realImagesExist(newIds,this.path+"/local/images/")
+          .then((realExists) => {
+            if(realExists){
+              console.log("realExists",realExists);
+              if(realExists.deleteIds.length > 0){
+                return this._deleteImages(realExists.deleteIds)
+                .then(() => {
+                  return {eventsData: eventsData, realImageSaved: realExists.bools};
+                });
+              }
+              else{
+                return {eventsData: eventsData, realImageSaved: realExists.bools};
+              }
+            }
+            else{
+              //images folder doesnt exists
+              return {eventsData: eventsData, realImageSaved: falseReturn};
+            }
+          });
+        }
       });
     }
     else if(pageId <= Constants.localPages){
@@ -127,35 +158,93 @@ export default class EventsDAO {
         else return false;
       })
       .then((fileData) => {
-        if(fileData) return JSON.parse(fileData);
+        var eventsData = JSON.parse(fileData);
+        var newIds = [];
+        for(i=0;i<eventsData.results.length;i++){
+          newIds.push(parseInt(eventsData.results[i].id));
+        }
+        var trueReturn = {};
+        for(i=0;i<newIds.length;i++){
+          trueReturn[newIds[i]] = true;
+        }
+        if(fileData) return {eventsData: eventsData, realImageSaved: trueReturn};
         return false;
       });
     }
+    else{
+      //crec que mai hauria d'estar aquí
+      return {eventsData: null, realImageSaved: false};
+    }
   }
 
-  saveLocalImage(itemId,imagePath,flatIndex){
-    var imageDestPath = this.path+"/local/images/"+flatIndex+"-image-"+itemId+".jpg";
+  _deleteImages(imageIds){
+    console.log("imageIds",imageIds);
+    var promises = [];
+    for(i=0;i<imageIds.length;i++){
+      var auxImagePath = this.path+"/local/images/image-"+imageIds[i]+".jpg";
+      console.log("should delte:",imageIds[i]);
+      promises.push(this.RNFS.unlink(auxImagePath));
+    }
+    // console.log("promises",promises);
+    return Promise.all(promises);
+  }
+
+  _realImagesExist(newIds, folderPath){
+    return this.RNFS.exists(folderPath)
+    .then((folderExists) => {
+      if(folderExists) return this.RNFS.readdir(folderPath);
+      return false;
+    })
+    .then((res)=>{
+      if(res){
+        var oldIds = [];
+        for(i=0;i<res.length;i++){
+          var auxId = parseInt(res[i].split("-")[1].split(".")[0]);
+          oldIds.push(auxId);
+        }
+        var distinctIds = [];
+        var oldContainsNew = {};
+        for(i=0;i<oldIds.length;i++){
+          if(!newIds.includes(oldIds[i])) {
+            distinctIds.push(oldIds[i]);
+            oldContainsNew[oldIds[i]] = false;
+          }
+          else{
+            oldContainsNew[oldIds[i]] = true;
+          }
+        }
+        console.log("distinctIds",distinctIds);
+        console.log("oldContainsNew",oldContainsNew);
+        return {bools:oldContainsNew,deleteIds:distinctIds};
+      }
+      return false;
+    });
+  }
+
+  saveLocalImage(itemId,imagePath/*,flatIndex*/){
+    // var imageDestPath = this.path+"/local/images/"+flatIndex+"-image-"+itemId+".jpg";
+    var imageDestPath = this.path+"/local/images/image-"+itemId+".jpg";
 
     return this.RNFS.mkdir(this.path+"/local/images",{NSURLIsExcludedFromBackupKey:true})
-    .then(() => {
+    /*.then(() => {
       return this._fileExistsInFolder("image-"+itemId+".jpg",this.path+"/local/images/",flatIndex);
-    })
-    .then((exists) => {
-      console.log("exists",exists);
-      if(!exists.bool){
+    })*/
+    .then((/*exists*/) => {
+      /*console.log("exists",exists);
+      if(!exists.bool){*/
         console.log("descarregant real ("+itemId+"): ",imagePath);
-        if(exists.deleteId !== -1){
+        /*if(exists.deleteId !== -1){
           this.RNFS.unlink(this.path+"/local/images/"+flatIndex+"-image-"+exists.deleteId+".jpg");
-        }
+        }*/
         return this.RNFS.downloadFile({
           fromUrl:imagePath,
           toFile: imageDestPath
         }).promise;
-      }
+      // }
     });
   }
 
-  checkRealImage(imageId,flatIndex){
+  /*checkRealImage(imageId,flatIndex){
     var imagesFolderPath = this.path+"/local/images/";
     var imageFuturePath = imagesFolderPath+flatIndex+"-image-"+imageId+".jpg";
     return this.RNFS.exists(imagesFolderPath) //existeix la carpeta d'imatges?
@@ -184,9 +273,9 @@ export default class EventsDAO {
       }
       return imageExists.bool;
     })
-  }
+  }*/
 
-  _fileExistsInFolder(fileName,folderPath,flatIndex){
+  /*_fileExistsInFolder(fileName,folderPath,flatIndex){
     return this.RNFS.readdir(folderPath)
     .then((res)=>{
       var exists=false;
@@ -203,6 +292,6 @@ export default class EventsDAO {
       }
       return {index: deleteId, bool: false, deleteId: deleteId};
     });
-  }
+  }*/
 
 }

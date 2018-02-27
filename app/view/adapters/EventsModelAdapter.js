@@ -6,11 +6,11 @@ export default class EventsModelAdapter {
     return dataAcc.getEventsData(pageId,internet);
   }
 
-  saveLocalImage(itemId,imagePath,flatIndex){
-    return dataAcc.saveLocalImage(itemId,imagePath,flatIndex);
+  saveLocalImage(itemId,imagePath){
+    return dataAcc.saveLocalImage(itemId,imagePath);
   }
 
-  checkRealImage(imageId){ //podria/hauria d'estar perfectament dins de saveLocalImage
+  /*checkRealImage(imageId){
     return dataAcc.checkRealImage(imageId);
-  }
+  }*/
 }
