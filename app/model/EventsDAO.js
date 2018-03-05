@@ -65,7 +65,7 @@ export default class EventsDAO {
     }
   }
 
-  downloadThumbnails(pageData){
+  downloadThumbnails(pageData,localData){
     var promises = [];
     for(i=0;i<pageData.results.length;i++){
       // console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
@@ -76,8 +76,12 @@ export default class EventsDAO {
       promises.push(singleProm.promise);
     }
     return Promise.all(promises)
-    .then(() => {
+    .then((res) => {
+      console.log("thumb results", res);
       return pageData;
+    })
+    .catch((error) => {
+      this._throwError('time-out',localData);
     });
   }
 
@@ -86,95 +90,105 @@ export default class EventsDAO {
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
     const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
 
-    if(internet){
-      return this.RNFS.mkdir(this.path+"/local/aux",{NSURLIsExcludedFromBackupKey:true})
-      .then(() => {
-        return this.RNFS.downloadFile({
-          fromUrl:url,
-          toFile:pagePath
-        }).promise;
-      })
-      .then((res)=>{
-        if(res.statusCode===200){
-          return this.RNFS.readFile(pagePath);
-        }
-        else{
-          throw 'no-page';
-        }
-      })
-      .then(fileData => {
-        var eventsData = JSON.parse(fileData);
-        return this._checkPage(eventsData,pageId);
-      })
-      .then(checkRes => {
-        console.log("checkRes",checkRes);
-        if(checkRes.local){
-          return checkRes.eventsData;
-        }
-        else{
-          return this.downloadThumbnails(checkRes.eventsData);
-        }
-      })
-      .then((eventsData)=>{
-        var newIds = [];
-        for(i=0;i<eventsData.results.length;i++){
-          newIds.push(parseInt(eventsData.results[i].id));
-        }
-        var falseReturn = {};
-        for(i=0;i<newIds.length;i++){
-          falseReturn[newIds[i]] = false;
-        }
-        if(pageId > Constants.localPages) {
-          return {eventsData: eventsData, realImageSaved: falseReturn};
-        }
-        else {
-          return this._realImagesExist(newIds,this.path+"/local/images/")
-          .then((realExists) => {
-            if(realExists){
-              console.log("realExists",realExists);
-              if(realExists.deleteIds.length > 0){
-                return this._deleteImages(realExists.deleteIds)
-                .then(() => {
+    return this.RNFS.exists(pagePathSaved)
+    .then((exists)=>{
+      if(exists) return this.RNFS.readFile(pagePathSaved);
+      else return false;
+    })
+    .then((fileData) => {
+      var localData = null;
+      if(fileData) localData = JSON.parse(fileData);
+
+      if(internet){
+        return this.RNFS.mkdir(this.path+"/local/aux",{NSURLIsExcludedFromBackupKey:true})
+        .then(() => {
+          return this.RNFS.downloadFile({
+            fromUrl:url,
+            toFile:pagePath
+          }).promise;
+        })
+        .then((res)=>{
+          if(res.statusCode===200){
+            return this.RNFS.readFile(pagePath);
+          }
+          else{
+            this._throwError('no-page');
+          }
+        })
+        .catch((error) => {
+          this._throwError('time-out',localData);
+        })
+        .then(fileData => {
+          var eventsData = JSON.parse(fileData);
+          return this._checkPage(eventsData,pageId);
+        })
+        .then(checkRes => {
+          console.log("checkRes",checkRes);
+          if(checkRes.local){
+            return checkRes.eventsData;
+          }
+          else{
+            return this.downloadThumbnails(checkRes.eventsData,localData);
+          }
+        })
+        .then((eventsData)=>{
+          var newIds = [];
+          for(i=0;i<eventsData.results.length;i++){
+            newIds.push(parseInt(eventsData.results[i].id));
+          }
+          var falseReturn = {};
+          for(i=0;i<newIds.length;i++){
+            falseReturn[newIds[i]] = false;
+          }
+          if(pageId > Constants.localPages) {
+            return {eventsData: eventsData, realImageSaved: falseReturn};
+          }
+          else {
+            return this._realImagesExist(newIds,this.path+"/local/images/")
+            .then((realExists) => {
+              if(realExists){
+                console.log("realExists",realExists);
+                if(realExists.deleteIds.length > 0){
+                  return this._deleteImages(realExists.deleteIds)
+                  .then(() => {
+                    return {eventsData: eventsData, realImageSaved: realExists.bools};
+                  });
+                }
+                else{
                   return {eventsData: eventsData, realImageSaved: realExists.bools};
-                });
+                }
               }
               else{
-                return {eventsData: eventsData, realImageSaved: realExists.bools};
+                //images folder doesnt exists
+                return {eventsData: eventsData, realImageSaved: falseReturn};
               }
-            }
-            else{
-              //images folder doesnt exists
-              return {eventsData: eventsData, realImageSaved: falseReturn};
-            }
-          });
-        }
-      });
-    }
-    else if(pageId <= Constants.localPages){
-      console.log("handling no internet but maybe local data");
-      return this.RNFS.exists(pagePathSaved)
-      .then((exists)=>{
-        if(exists) return this.RNFS.readFile(pagePathSaved);
-        else return false;
-      })
-      .then((fileData) => {
-        var eventsData = JSON.parse(fileData);
+            });
+          }
+        });
+      }
+      else if(pageId <= Constants.localPages){
+        console.log("handling no internet but maybe local data");
+
         var newIds = [];
-        for(i=0;i<eventsData.results.length;i++){
-          newIds.push(parseInt(eventsData.results[i].id));
+        for(i=0;i<localData.results.length;i++){
+          newIds.push(parseInt(localData.results[i].id));
         }
         var trueReturn = {};
         for(i=0;i<newIds.length;i++){
           trueReturn[newIds[i]] = true;
         }
-        if(fileData) return {eventsData: eventsData, realImageSaved: trueReturn};
+        if(fileData) return {eventsData: localData, realImageSaved: trueReturn};
         return false;
-      });
-    }
-    else{
-      //crec que mai hauria d'estar aquí
-      return {eventsData: null, realImageSaved: false};
-    }
+      }
+      else{
+        //crec que mai hauria d'estar aquí
+        return {eventsData: null, realImageSaved: false};
+      }
+    });
+  }
+
+  _throwError(errCode,localData){
+    throw {errCode: errCode, localData: localData};
   }
 
   _deleteImages(imageIds){

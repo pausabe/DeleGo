@@ -40,7 +40,8 @@ export default class EventsView extends Component<{}> {
       data: [],
       refreshing: false,
       internet: null,
-      firstLoad: true
+      firstLoad: true,
+      coolInternet: true
     };
 
     this.page = 0;
@@ -98,14 +99,38 @@ export default class EventsView extends Component<{}> {
       }
     })
     .catch((error) => {
-      console.log("getEventsData Error: ",error);
-      if(error === 'no-page'){
+      if(error.errCode === 'no-page'){
+        console.log("getEventsData Catch -> no-page",error);
         this.noMorePages = true;
         console.log("setState 2");
         this.page -= 1;
         this.setState({ refreshing: false });
       }
+      else if(error.errCode === 'time-out'){
+        console.log("getEventsData Catch -> time-out",error);
+        //si és la "primera carregada" mostrar contingut offline
+        if(this.state.firstLoad && error.localData){
+          console.log("time-out first load and data not null");
+
+          var ids = [];
+          for(i=0;i<error.localData.results.length;i++){
+            ids.push(parseInt(error.localData.results[i].id));
+          }
+          var trueReturn = {};
+          for(i=0;i<ids.length;i++){
+            this.realImageSaved[ids[i]] = true;
+          }
+
+          this.setState({ coolInternet: false, data: error.localData.results });
+          this._getEventsData();
+        }
+        else{
+          this.setState({ coolInternet: false });
+          this._getEventsData();
+        }
+      }
       else{
+        console.log("getEventsData Error: ",error);
         this.setState({ internet: false, refreshing: false });
       }
     });
@@ -118,7 +143,8 @@ export default class EventsView extends Component<{}> {
     this.setState({
       data: this.page === 1 ? eventsData : [...this.state.data, ...eventsData],
       refreshing: false,
-      firstLoad: false
+      firstLoad: false,
+      coolInternet: true,
     },()=>{
       this.loadingMore = false;
     });
@@ -219,6 +245,7 @@ export default class EventsView extends Component<{}> {
   }
 
   render() {
+    console.log("super render",this.state.data);
     return (
       <View style={Styles.eventsListConainer}>
         {this.state.internet?
@@ -231,7 +258,12 @@ export default class EventsView extends Component<{}> {
           :
           null
         }
-        {this.state.firstLoad?
+        {!this.state.coolInternet?
+          <Text>Not cool internet</Text>
+          :
+          null
+        }
+        {this.state.firstLoad && !this.state.data.length?
           this._firstLoadComponent()
           :
           <FlatList
