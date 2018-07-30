@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Button} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from "react-navigation";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 

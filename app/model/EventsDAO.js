@@ -112,11 +112,12 @@ export default class EventsDAO {
             return this.RNFS.readFile(pagePath);
           }
           else{
-            this._throwError('no-page');
+            throw 'no-page';
           }
         })
         .catch((error) => {
-          this._throwError('time-out',localData);
+          if(error === 'no-page') this._throwError('no-page');
+          else this._throwError('time-out',localData);
         })
         .then(fileData => {
           var eventsData = JSON.parse(fileData);

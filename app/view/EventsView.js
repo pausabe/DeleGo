@@ -44,7 +44,7 @@ export default class EventsView extends Component<{}> {
       coolInternet: true
     };
 
-    this.page = 0;
+    this.page = 1;//0;
     this.realImageSaved = {};
     this.noMorePages = false;
     this.loadingMore = false;
@@ -61,11 +61,13 @@ export default class EventsView extends Component<{}> {
     }
     else if(!this.state.internet && connectionInfo.type!=='none'){
       console.log("Firs load or recupered internet connection");
+
       console.log("setState 7");
-      this.page = 1;
-      this.setState({data: [],internet: connectionInfo.type!=='none'},()=>{
-        this._handleRefresh();
+      // this.page = 1;
+      this.setState({/*data: [],*/internet: connectionInfo.type!=='none'},()=>{
+        if(this.state.firstLoad) this._handleRefresh();
       });
+
     }
     else if(this.state.internet === null && connectionInfo.type==='none'){
       //first load no internet.. load local data
