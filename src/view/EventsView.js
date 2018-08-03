@@ -17,13 +17,16 @@ import Styles from '../constants/Styles';
 import Constants from '../constants/Constants';
 
 export default class EventsView extends Component<{}> {
-  componentWillMount() {
+  /*componentWillMount() {
     this.props.navigation.setParams({
       scrollToTop: this._onPressGoToTop.bind(this),
     });
-  }
+  }*/
 
   componentDidMount(){
+    this.props.navigation.setParams({
+      scrollToTop: this._onPressGoToTop.bind(this),
+    });
     NetInfo.addEventListener('connectionChange',this._handleConnectionChange.bind(this));
   }
 
