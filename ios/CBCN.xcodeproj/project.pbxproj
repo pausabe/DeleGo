@@ -50,6 +50,7 @@
 		CDB3EC54C7E04559B9E74DD8 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D02E7C7B3CB546F2A1F2BB0B /* Foundation.ttf */; };
 		DAF267DA4BF14C35BF4B506F /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 029BA85AEF3548FBB2E051D3 /* FontAwesome.ttf */; };
 		EA2EDFA39091431BBCA3212D /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD442CA32B2B4DE4AF7146C8 /* Ionicons.ttf */; };
+		7E57D679E7AE4E7F8169684B /* Futura.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 6C81B492DE894476BA582BA4 /* Futura.ttc */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -447,6 +448,7 @@
 		C094B0DD6EDB4D9FAA0DA45F /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		D02E7C7B3CB546F2A1F2BB0B /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		DD442CA32B2B4DE4AF7146C8 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		6C81B492DE894476BA582BA4 /* Futura.ttc */ = {isa = PBXFileReference; name = "Futura.ttc"; path = "../src/constants/fonts/Futura.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -652,6 +654,7 @@
 				BEE09E50F4044512862A7570 /* Octicons.ttf */,
 				3F853466C0524C58B9A7DC95 /* SimpleLineIcons.ttf */,
 				0F0FADD11EC54D19A4CEDDB2 /* Zocial.ttf */,
+				6C81B492DE894476BA582BA4 /* Futura.ttc */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1311,6 +1314,7 @@
 				0DA93AA818CE46009DFD648B /* Octicons.ttf in Resources */,
 				5C1BA2F861604F9CB87960D7 /* SimpleLineIcons.ttf in Resources */,
 				98A98C9ACFAF43F7AC45A7B6 /* Zocial.ttf in Resources */,
+				7E57D679E7AE4E7F8169684B /* Futura.ttc in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

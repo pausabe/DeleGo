@@ -1,4 +1,4 @@
 module.exports = {
-  eventsPerPage: 8,
+  events_per_page: 4,
   localPages: 1
 };

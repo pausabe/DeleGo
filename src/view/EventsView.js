@@ -93,10 +93,10 @@ export default class EventsView extends Component<{}> {
         }
 
 
-        /*for(i=0;i<res.eventsData.results.length;i++){
+        /*for(i=0;i<res.eventsData.length;i++){
           this.realImageSaved.push(res.realImageSaved[i]);
         }*/
-        this._updateNewData(res.eventsData.results);
+        this._updateNewData(res.eventsData);
       }
       else{
         //No internet connection and no local data
@@ -118,15 +118,15 @@ export default class EventsView extends Component<{}> {
           console.log("time-out first load and data not null");
 
           var ids = [];
-          for(i=0;i<error.localData.results.length;i++){
-            ids.push(parseInt(error.localData.results[i].id));
+          for(i=0;i<error.localData.length;i++){
+            ids.push(parseInt(error.localData[i].id));
           }
           var trueReturn = {};
           for(i=0;i<ids.length;i++){
             this.realImageSaved[ids[i]] = true;
           }
 
-          this.setState({ coolInternet: false, data: error.localData.results });
+          this.setState({ coolInternet: false, data: error.localData });
           this._getEventsData();
         }
         else{
@@ -251,49 +251,57 @@ export default class EventsView extends Component<{}> {
 
   render() {
     console.log("super render",this.state.data);
-    return (
-      <View style={Styles.eventsListConainer}>
-        {this.state.internet?
-          <Text>hi ha internet</Text>
-          :
-          <Text>NO hi ha internet</Text>
-        }
-        {this.state.refreshing?
-          <Text>refreshing...</Text>
-          :
-          null
-        }
-        {!this.state.coolInternet?
-          <Text>Not cool internet</Text>
-          :
-          null
-        }
-        {this.state.firstLoad && !this.state.data.length?
-          this._firstLoadComponent()
-          :
-          <FlatList
-            ref={(ref) => { this.flatListRef = ref; }}
-            data={this.state.data}
-            renderItem={({ item, index }) => (
-              <EventItem
-                realImageSaved={this.realImageSaved[item.id]}
-                item={item}
-                index={index}
-                mAdapter={this.mAdapter}
-                onPressItem={this.onPressItem.bind(this,item.id)}
-              />
-            )}
-            onScroll={this._handleOnScroll.bind(this)}
-            keyExtractor={item => item.id}
-            ListFooterComponent={this._renderFooter.bind(this)}
-            onRefresh={this._handleRefresh.bind(this)}
-            refreshing={this.state.refreshing}
-            onEndReached={this._handleLoadMore.bind(this)}
-            onEndReachedThreshold={0.8}
-          />
-        }
-      </View>
-    );
+    //if(this.state.data.length > 0)
+    //return null;
+
+    try {
+      return (
+        <View style={Styles.eventsListConainer}>
+          {this.state.internet?
+            <Text>hi ha internet</Text>
+            :
+            <Text>NO hi ha internet</Text>
+          }
+          {this.state.refreshing?
+            <Text>refreshing...</Text>
+            :
+            null
+          }
+          {!this.state.coolInternet?
+            <Text>Not cool internet</Text>
+            :
+            null
+          }
+          {this.state.firstLoad && !this.state.data.length?
+            this._firstLoadComponent()
+            :
+            <FlatList
+              ref={(ref) => { this.flatListRef = ref; }}
+              data={this.state.data}
+              renderItem={({ item, index }) => (
+                <EventItem
+                  realImageSaved={this.realImageSaved[item.id]}
+                  item={item}
+                  index={index}
+                  mAdapter={this.mAdapter}
+                  onPressItem={this.onPressItem.bind(this,item.id)}
+                />
+              )}
+              onScroll={this._handleOnScroll.bind(this)}
+              keyExtractor={item => item.id}
+              ListFooterComponent={this._renderFooter.bind(this)}
+              onRefresh={this._handleRefresh.bind(this)}
+              refreshing={this.state.refreshing}
+              onEndReached={this._handleLoadMore.bind(this)}
+              onEndReachedThreshold={0.8}
+            />
+          }
+        </View>
+      );
+    }
+    catch (e) {
+      console.log("Error: ", e);
+    }
   }
 }
 

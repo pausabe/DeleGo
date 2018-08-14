@@ -49,7 +49,7 @@ export default class EventItem extends Component {
 
   componentDidMount(){
     if(!this.props.realImageSaved && !this.imageOverLocal){
-      this.props.mAdapter.saveLocalImage(this.props.item.id,this.props.item.picture.real)
+      this.props.mAdapter.saveLocalImage(this.props.item.id,`https://pausabe.com/apps/CBCN/images/prova1.jpg` /*TODO: alex integration this.props.item.image.real*/)
       .then(()=>{
         Animated.timing(this.state.opaItem,{
           toValue: 1,
@@ -103,76 +103,89 @@ export default class EventItem extends Component {
   }
 
   render(){
-    // console.log("SUPER RENDER ADVISE",this.props.realImageSaved);
+    try {
+      // console.log("SUPER RENDER ADVISE",this.props.realImageSaved);
 
-    renderType = ""
+      renderType = ""
 
-    if(this.imageOverLocal){
-      renderType += "| online image";
-      if(this.state.needThumb) renderType += "| thumb";
-    }
-    else{
-      if(this.state.realImageSaved) renderType += "| real saved";
-      if(this.state.needThumb) renderType += "| thumb";
-    }
+      if(this.imageOverLocal){
+        renderType += "| online image";
+        if(this.state.needThumb) renderType += "| thumb";
+      }
+      else{
+        if(this.state.realImageSaved) renderType += "| real saved";
+        if(this.state.needThumb) renderType += "| thumb";
+      }
 
-    // console.log("rendering item ("+this.props.item.id+") - "+renderType+". Container Opacity: "+this.state.opaItem._value);
+      // console.log("rendering item ("+this.props.item.id+") - "+renderType+". Container Opacity: "+this.state.opaItem._value);
 
-    return(
-      <Animated.View style={[{opacity:this.state.opaItem},Styles.eventItemConainer]}>
-        <TouchableOpacity
-          onPress={this.props.onPressItem}>
-          <View style={Styles.eventItemImageContainer}>
-            {this.imageOverLocal?
-              <Animated.Image
-                style={[{position:this.state.realPosition},Styles.eventItemImage]}
-                source={{uri:this.props.item.picture.real}}
-                onError={this._onLoadError.bind(this,"real")}
-                onLoad={this._onRealLoad.bind(this)}
-              />
-            :
-              <View>
-                {this.state.realImageSaved?
-                  <Animated.Image
-                    style={[{position:this.state.realPosition},Styles.eventItemImage]}
-                    source={{isStatic:true,uri:this.uriPathReal}}
-                    onError={this._onLoadError.bind(this,"real")}
-                    onLoad={this._onRealLoad.bind(this)}
-                  />
-                  :
-                  null
-                }
-              </View>
-            }
-            {this.state.needThumb?
-              <Animated.Image
-                style={[{opacity:this.state.opaThumb},Styles.eventItemImage]}
-                blurRadius={2}
-                source={{isStatic:true, uri:this.uriPathThumb}}
-                onError={this._onLoadError.bind(this,"thumb")}
-                onLoad={this._onThumbnailLoad.bind(this)}
-              />
+      return(
+        <Animated.View style={[{opacity:this.state.opaItem},Styles.eventItemContainer]}>
+          <TouchableOpacity
+            onPress={this.props.onPressItem}>
+            <View style={Styles.eventItemImageContainer}>
+              {this.imageOverLocal?
+                <Animated.Image
+                  style={[{position:this.state.realPosition},Styles.eventItemImage]}
+                  source={{uri:`https://pausabe.com/apps/CBCN/images/prova1.jpg` /*TODO: alex integration this.props.item.image.real*/}}
+                  onError={this._onLoadError.bind(this,"real")}
+                  onLoad={this._onRealLoad.bind(this)}
+                />
               :
-              null
-            }
-          </View>
-          <View style={Styles.eventItemTextContainer}>
-            <Text>
-              {this.props.item.title}
-            </Text>
-            <Text>
-              {this.props.item.subtitle}
-            </Text>
-            <Text>
-              {
-                this.props.item.date.day+"/"+
-                this.props.item.date.month+"/"+
-                this.props.item.date.year
+                <View>
+                  {this.state.realImageSaved?
+                    <Animated.Image
+                      style={[{position:this.state.realPosition},Styles.eventItemImage]}
+                      source={{isStatic:true,uri:this.uriPathReal}}
+                      onError={this._onLoadError.bind(this,"real")}
+                      onLoad={this._onRealLoad.bind(this)}
+                    />
+                    :
+                    null
+                  }
+                </View>
               }
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </Animated.View>
-    );
+              {this.state.needThumb?
+                <Animated.Image
+                  style={[{opacity:this.state.opaThumb},Styles.eventItemImage]}
+                  blurRadius={2}
+                  source={{isStatic:true, uri:this.uriPathThumb}}
+                  onError={this._onLoadError.bind(this,"thumb")}
+                  onLoad={this._onThumbnailLoad.bind(this)}
+                />
+                :
+                null
+              }
+            </View>
+
+
+            <View style={Styles.eventItemTextContainer}>
+              <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 10}}>
+                <Text style={Styles.text_event_month}>
+                  {"FEB"}
+                </Text>
+                <Text style={Styles.text_event_day}>
+                  {"17"}
+                </Text>
+              </View>
+              <View style={{flex: 7, flexDirection: 'column', padding: 10,}}>
+                <Text style={Styles.text_event_title}>
+                  {"STEUBENVILLE CONFERENCE '18"/*TODO: alex integration this.props.item.title*/}
+                </Text>
+                <Text style={Styles.text_event_subtitle}>
+                  {"Encounter with the love of Jesus Christ"/*TODO: alex integration this.props.item.subtitle*/}
+                </Text>
+              </View>
+            </View>
+
+
+
+          </TouchableOpacity>
+        </Animated.View>
+      );
+    }
+    catch (e) {
+      console.log("Error: ", e);
+    }
   }
 }

@@ -67,11 +67,12 @@ export default class EventsDAO {
 
   downloadThumbnails(pageData,localData){
     var promises = [];
-    for(i=0;i<pageData.results.length;i++){
-      // console.log("descarregant thumb ("+pageData.results[i].id+"): ",pageData.results[i].picture.thumbnail);
+    for(i=0;i<pageData.length;i++){
+      // console.log("descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.thumbnail);
       var singleProm = this.RNFS.downloadFile({
-        fromUrl:pageData.results[i].picture.thumbnail,
-        toFile:this.path+"/thumbnailEvent"+pageData.results[i].id+".jpg"
+        //TODO: alex integration
+        fromUrl: `https://pausabe.com/apps/CBCN/images/provaLQ1.jpg`,//pageData[i].image.thumbnail,
+        toFile: this.path+"/thumbnailEvent"+pageData[i].id+".jpg"
       });
       promises.push(singleProm.promise);
     }
@@ -88,7 +89,9 @@ export default class EventsDAO {
   getEventsData(pageId,internet){
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
-    const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
+    //const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
+
+    const url = `http://localhost:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
 
     return this.RNFS.exists(pagePathSaved)
     .then((exists)=>{
@@ -134,8 +137,8 @@ export default class EventsDAO {
         })
         .then((eventsData)=>{
           var newIds = [];
-          for(i=0;i<eventsData.results.length;i++){
-            newIds.push(parseInt(eventsData.results[i].id));
+          for(i=0;i<eventsData.length;i++){
+            newIds.push(parseInt(eventsData[i].id));
           }
           var falseReturn = {};
           for(i=0;i<newIds.length;i++){
@@ -171,8 +174,8 @@ export default class EventsDAO {
         console.log("handling no internet but maybe local data");
 
         var newIds = [];
-        for(i=0;i<localData.results.length;i++){
-          newIds.push(parseInt(localData.results[i].id));
+        for(i=0;i<localData.length;i++){
+          newIds.push(parseInt(localData[i].id));
         }
         var trueReturn = {};
         for(i=0;i<newIds.length;i++){
