@@ -13,10 +13,10 @@ import {
 
 import ModelAdapter from "./adapters/EventsModelAdapter";
 import EventItem from "./components/EventItem";
-import Styles from '../constants/Styles';
-import Constants from '../constants/Constants';
+import Styles from '../utils/Styles';
+import Constants from '../utils/Constants';
 
-export default class EventsView extends Component<{}> {
+export default class EventsView extends Component {
   /*componentWillMount() {
     this.props.navigation.setParams({
       scrollToTop: this._onPressGoToTop.bind(this),

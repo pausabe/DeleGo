@@ -50,7 +50,17 @@
 		<string>Octicons.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
-		<string>Futura.ttc</string>
+		<string>Futura Condensed Medium.ttc</string>
+		<string>Futura Medium.ttc</string>
+		<string>Futura-CondensedMedium.ttc</string>
+		<string>Futura-Medium.ttc</string>
+		<string>GillSans-LightItalic.ttc</string>
+		<string>futura_medium.ttc</string>
+		<string>Futura-Bold.ttf</string>
+		<string>Futura-CondensedExtraBold.ttf</string>
+		<string>Futura-CondensedMedium.ttf</string>
+		<string>Futura-Medium.ttf</string>
+		<string>Futura-MediumItalic.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

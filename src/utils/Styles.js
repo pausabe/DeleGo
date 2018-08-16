@@ -1,9 +1,9 @@
 import { Platform, StyleSheet } from 'react-native';
 
-import Colors from './Colors';
+import Colors from '../utils/Colors';
 
-var Dimensions = require('Dimensions');
-var { width, height } = Dimensions.get('window');
+//var Dimensions = require('Dimensions');
+//var { width, height } = Dimensions.get('window');
 
 module.exports = StyleSheet.create({
   tabContainer: {
@@ -32,7 +32,6 @@ module.exports = StyleSheet.create({
   },
   eventItemContainer:{
     backgroundColor: Colors.backgroundEventItem,
-    // margin: 5,
     marginHorizontal: 12,
     marginBottom: 12,
     borderWidth: 1,
@@ -43,8 +42,7 @@ module.exports = StyleSheet.create({
   },
   eventItemImage:{
     resizeMode:"cover",
-    //width:width,
-    height:200,
+    height: 200,
   },
   eventItemTextContainer:{
     flexDirection: 'row',
@@ -56,15 +54,17 @@ module.exports = StyleSheet.create({
   },
   text_event_day:{
     fontSize: 25,
-    fontFamily: 'Futura-Medium'
+    fontFamily: 'Futura-Medium',
+    color: Colors.text_black,
   },
   text_event_title:{
     fontSize: 25,
-    fontFamily: 'Futura-CondensedMedium'
+    fontFamily: 'Futura-CondensedMedium',
+    color: Colors.text_black,
   },
   text_event_subtitle:{
     fontSize: 15,
-    color: 'gray',
-    fontFamily: 'Futura-Medium'
+    color: Colors.text_gray,
+    fontFamily: 'Futura-Medium',
   },
 });

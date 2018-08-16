@@ -8,8 +8,8 @@ import {
   Platform
  } from 'react-native';
 
-import Styles from '../../constants/Styles';
-import Constants from '../../constants/Constants';
+import Styles from '../../utils/Styles';
+import Constants from '../../utils/Constants';
 
 export default class EventItem extends Component {
   constructor(props){

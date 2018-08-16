@@ -4,8 +4,8 @@ import {TabNavigator, TabBarBottom, StackNavigator} from "react-navigation";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import HeaderBar from './view/components/HeaderBar';
-import Styles from './constants/Styles';
-import Colors from './constants/Colors';
+import Styles from './utils/Styles';
+import Colors from './utils/Colors';
 import LanguagesSelector from './languages/selector';
 import EventsTab from './controller/EventsController';
 import EventDetailsView from './controller/EventDetailsController';
@@ -52,7 +52,6 @@ const GroupsStack = StackNavigator({
     navigationOptions: {
       title: lang.groups.tabTitle,
       headerTitle: <HeaderBar />,
-      headerStyle: Styles.headerBarContainer,
       headerStyle: Styles.headerBarContainer,
       tabBarIcon: ({ focused, tintColor }) => {
         let iconName;

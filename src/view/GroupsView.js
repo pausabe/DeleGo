@@ -4,9 +4,9 @@ import {
   View
 } from 'react-native';
 
-import Styles from '../constants/Styles';
+import Styles from '../utils/Styles';
 
-export default class GroupsView extends Component<{}> {
+export default class GroupsView extends Component {
   render() {
     return (
       <View style={Styles.tabContainer}>

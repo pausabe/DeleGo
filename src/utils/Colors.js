@@ -9,4 +9,6 @@ module.exports = {
   backgroundEventItem: 'white',
   backgroundItemImage: 'rgb(230, 230, 230)',
   light_gray: 'rgb(217, 217, 217)',
+  text_gray: 'gray',
+  text_black: 'black',
 };

@@ -1,6 +1,6 @@
 import {Platform} from 'react-native';
 
-import Constants from '../constants/Constants';
+import Constants from '../utils/Constants';
 
 export default class EventsDAO {
   constructor(){
@@ -91,7 +91,7 @@ export default class EventsDAO {
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
     //const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
 
-    const url = `http://localhost:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
+    const url = `http://172.20.10.2:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
 
     return this.RNFS.exists(pagePathSaved)
     .then((exists)=>{

@@ -35,11 +35,12 @@
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
 		2DCD954D1E0B4F2C00145EB5 /* CBCNTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* CBCNTests.m */; };
+		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		4A9C570747954BE88DCCEEF9 /* libRNFS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DB0B9E86E6E418B8CD4D322 /* libRNFS.a */; };
 		542BE1C8C29241F29A75C966 /* MaterialCommunityIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C094B0DD6EDB4D9FAA0DA45F /* MaterialCommunityIcons.ttf */; };
 		5C1BA2F861604F9CB87960D7 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3F853466C0524C58B9A7DC95 /* SimpleLineIcons.ttf */; };
-		2DF0FFEE2056DD460020B375 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3EA31DF850E9000B6D8A /* libReact.a */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
+		6F4E17CA06004C5191238C00 /* Futura.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 7A611FF9C12846B19056EAA7 /* Futura.ttc */; };
 		6FA8ACFBB9A44B5DA65C6FC0 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F67275552F04E7EB754A7E9 /* libRNVectorIcons.a */; };
 		79D92231640B45B4A915C421 /* Feather.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6F84408EE54942B0BB58B871 /* Feather.ttf */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -50,7 +51,17 @@
 		CDB3EC54C7E04559B9E74DD8 /* Foundation.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D02E7C7B3CB546F2A1F2BB0B /* Foundation.ttf */; };
 		DAF267DA4BF14C35BF4B506F /* FontAwesome.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 029BA85AEF3548FBB2E051D3 /* FontAwesome.ttf */; };
 		EA2EDFA39091431BBCA3212D /* Ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DD442CA32B2B4DE4AF7146C8 /* Ionicons.ttf */; };
-		7E57D679E7AE4E7F8169684B /* Futura.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 6C81B492DE894476BA582BA4 /* Futura.ttc */; };
+		5E0FB4135D2E44BBBC5E5CFC /* Futura Condensed Medium.ttc in Resources */ = {isa = PBXBuildFile; fileRef = C5EA4E4DFA4443BF83FF5800 /* Futura Condensed Medium.ttc */; };
+		CDCEE07BE8054B289028E2FA /* Futura Medium.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 861489201EF541B492DEC736 /* Futura Medium.ttc */; };
+		B152AA2BB4054B79BEA60D29 /* Futura-CondensedMedium.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 5013F2E7960A47FC80DB2955 /* Futura-CondensedMedium.ttc */; };
+		FDD6757885624739B2D3CEF8 /* Futura-Medium.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 49B6FA40ACB84461B0D4B4E1 /* Futura-Medium.ttc */; };
+		38F62AE6450C4A75BF7F8571 /* GillSans-LightItalic.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 0D1F1F0AB1004F8189889C5A /* GillSans-LightItalic.ttc */; };
+		7E7ED3A961C542BCAC34FD45 /* futura_medium.ttc in Resources */ = {isa = PBXBuildFile; fileRef = 4C816ECD2BDE4E29B30BAC94 /* futura_medium.ttc */; };
+		E6C35B56162A407B93F704BF /* Futura-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 0A415FFDAFB94CEC87EB3D1F /* Futura-Bold.ttf */; };
+		6CCC9DA5061A4FA69FE00AC4 /* Futura-CondensedExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 260D9AC05248414BB5420DA1 /* Futura-CondensedExtraBold.ttf */; };
+		63CBAEABE6CE4529A7CBEB5C /* Futura-CondensedMedium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 58E9BAA8A5F74C8A9EAC670F /* Futura-CondensedMedium.ttf */; };
+		9C888B1838CC4074A55F2CAA /* Futura-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 4CDA479450B1416AB9B72A06 /* Futura-Medium.ttf */; };
+		36D80ADA1F454D68B214387D /* Futura-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 23DE1968A2084004A8F8A2F5 /* Futura-MediumItalic.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -144,62 +155,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 3DBE0D0D1F3B181C0099AA32;
 			remoteInfo = "fishhook-tvOS";
-		};
-		2DF0FFDE2056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EBF21BDC1FC498900052F4D5;
-			remoteInfo = jsinspector;
-		};
-		2DF0FFE02056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EBF21BFA1FC4989A0052F4D5;
-			remoteInfo = "jsinspector-tvOS";
-		};
-		2DF0FFE22056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 139D7ECE1E25DB7D00323FB7;
-			remoteInfo = "third-party";
-		};
-		2DF0FFE42056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D383D3C1EBD27B6005632C8;
-			remoteInfo = "third-party-tvOS";
-		};
-		2DF0FFE62056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 139D7E881E25C6D100323FB7;
-			remoteInfo = "double-conversion";
-		};
-		2DF0FFE82056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
-			remoteInfo = "double-conversion-tvOS";
-		};
-		2DF0FFEA2056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
-			remoteInfo = privatedata;
-		};
-		2DF0FFEC2056DD460020B375 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
-			remoteInfo = "privatedata-tvOS";
 		};
 		3DAD3E831DF850E9000B6D8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -437,6 +392,7 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		6F84408EE54942B0BB58B871 /* Feather.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Feather.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Feather.ttf"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
+		7A611FF9C12846B19056EAA7 /* Futura.ttc */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Futura.ttc; path = ../src/assets/fonts/Futura.ttc; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		8D6FC0D7161A483B90A46C43 /* MaterialIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialIcons.ttf"; sourceTree = "<group>"; };
 		8DDB44C47A0842E78F2F169B /* RNVectorIcons.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNVectorIcons.xcodeproj; path = "../node_modules/react-native-vector-icons/RNVectorIcons.xcodeproj"; sourceTree = "<group>"; };
@@ -448,7 +404,17 @@
 		C094B0DD6EDB4D9FAA0DA45F /* MaterialCommunityIcons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = MaterialCommunityIcons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/MaterialCommunityIcons.ttf"; sourceTree = "<group>"; };
 		D02E7C7B3CB546F2A1F2BB0B /* Foundation.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Foundation.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Foundation.ttf"; sourceTree = "<group>"; };
 		DD442CA32B2B4DE4AF7146C8 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		6C81B492DE894476BA582BA4 /* Futura.ttc */ = {isa = PBXFileReference; name = "Futura.ttc"; path = "../src/constants/fonts/Futura.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		C5EA4E4DFA4443BF83FF5800 /* Futura Condensed Medium.ttc */ = {isa = PBXFileReference; name = "Futura Condensed Medium.ttc"; path = "../src/assets/fonts/Futura Condensed Medium.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		861489201EF541B492DEC736 /* Futura Medium.ttc */ = {isa = PBXFileReference; name = "Futura Medium.ttc"; path = "../src/assets/fonts/Futura Medium.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5013F2E7960A47FC80DB2955 /* Futura-CondensedMedium.ttc */ = {isa = PBXFileReference; name = "Futura-CondensedMedium.ttc"; path = "../src/assets/fonts/Futura-CondensedMedium.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		49B6FA40ACB84461B0D4B4E1 /* Futura-Medium.ttc */ = {isa = PBXFileReference; name = "Futura-Medium.ttc"; path = "../src/assets/fonts/Futura-Medium.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0D1F1F0AB1004F8189889C5A /* GillSans-LightItalic.ttc */ = {isa = PBXFileReference; name = "GillSans-LightItalic.ttc"; path = "../src/assets/fonts/GillSans-LightItalic.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4C816ECD2BDE4E29B30BAC94 /* futura_medium.ttc */ = {isa = PBXFileReference; name = "futura_medium.ttc"; path = "../src/assets/fonts/futura_medium.ttc"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		0A415FFDAFB94CEC87EB3D1F /* Futura-Bold.ttf */ = {isa = PBXFileReference; name = "Futura-Bold.ttf"; path = "../src/utils/assets/fonts/Futura-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		260D9AC05248414BB5420DA1 /* Futura-CondensedExtraBold.ttf */ = {isa = PBXFileReference; name = "Futura-CondensedExtraBold.ttf"; path = "../src/utils/assets/fonts/Futura-CondensedExtraBold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		58E9BAA8A5F74C8A9EAC670F /* Futura-CondensedMedium.ttf */ = {isa = PBXFileReference; name = "Futura-CondensedMedium.ttf"; path = "../src/utils/assets/fonts/Futura-CondensedMedium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		4CDA479450B1416AB9B72A06 /* Futura-Medium.ttf */ = {isa = PBXFileReference; name = "Futura-Medium.ttf"; path = "../src/utils/assets/fonts/Futura-Medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		23DE1968A2084004A8F8A2F5 /* Futura-MediumItalic.ttf */ = {isa = PBXFileReference; name = "Futura-MediumItalic.ttf"; path = "../src/utils/assets/fonts/Futura-MediumItalic.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -620,14 +586,6 @@
 				5F0B0A13202CB7A300A450A8 /* libdouble-conversion.a */,
 				5F0B0A15202CB7A300A450A8 /* libprivatedata.a */,
 				5F0B0A17202CB7A300A450A8 /* libprivatedata-tvOS.a */,
-				2DF0FFDF2056DD460020B375 /* libjsinspector.a */,
-				2DF0FFE12056DD460020B375 /* libjsinspector-tvOS.a */,
-				2DF0FFE32056DD460020B375 /* libthird-party.a */,
-				2DF0FFE52056DD460020B375 /* libthird-party.a */,
-				2DF0FFE72056DD460020B375 /* libdouble-conversion.a */,
-				2DF0FFE92056DD460020B375 /* libdouble-conversion.a */,
-				2DF0FFEB2056DD460020B375 /* libprivatedata.a */,
-				2DF0FFED2056DD460020B375 /* libprivatedata-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -654,7 +612,18 @@
 				BEE09E50F4044512862A7570 /* Octicons.ttf */,
 				3F853466C0524C58B9A7DC95 /* SimpleLineIcons.ttf */,
 				0F0FADD11EC54D19A4CEDDB2 /* Zocial.ttf */,
-				6C81B492DE894476BA582BA4 /* Futura.ttc */,
+				7A611FF9C12846B19056EAA7 /* Futura.ttc */,
+				C5EA4E4DFA4443BF83FF5800 /* Futura Condensed Medium.ttc */,
+				861489201EF541B492DEC736 /* Futura Medium.ttc */,
+				5013F2E7960A47FC80DB2955 /* Futura-CondensedMedium.ttc */,
+				49B6FA40ACB84461B0D4B4E1 /* Futura-Medium.ttc */,
+				0D1F1F0AB1004F8189889C5A /* GillSans-LightItalic.ttc */,
+				4C816ECD2BDE4E29B30BAC94 /* futura_medium.ttc */,
+				0A415FFDAFB94CEC87EB3D1F /* Futura-Bold.ttf */,
+				260D9AC05248414BB5420DA1 /* Futura-CondensedExtraBold.ttf */,
+				58E9BAA8A5F74C8A9EAC670F /* Futura-CondensedMedium.ttf */,
+				4CDA479450B1416AB9B72A06 /* Futura-Medium.ttf */,
+				23DE1968A2084004A8F8A2F5 /* Futura-MediumItalic.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1028,62 +997,6 @@
 			remoteRef = 2D16E6851FA4F8DC00B85C8A /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		2DF0FFDF2056DD460020B375 /* libjsinspector.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libjsinspector.a;
-			remoteRef = 2DF0FFDE2056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFE12056DD460020B375 /* libjsinspector-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libjsinspector-tvOS.a";
-			remoteRef = 2DF0FFE02056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFE32056DD460020B375 /* libthird-party.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libthird-party.a";
-			remoteRef = 2DF0FFE22056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFE52056DD460020B375 /* libthird-party.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libthird-party.a";
-			remoteRef = 2DF0FFE42056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFE72056DD460020B375 /* libdouble-conversion.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libdouble-conversion.a";
-			remoteRef = 2DF0FFE62056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFE92056DD460020B375 /* libdouble-conversion.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libdouble-conversion.a";
-			remoteRef = 2DF0FFE82056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFEB2056DD460020B375 /* libprivatedata.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libprivatedata.a;
-			remoteRef = 2DF0FFEA2056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		2DF0FFED2056DD460020B375 /* libprivatedata-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libprivatedata-tvOS.a";
-			remoteRef = 2DF0FFEC2056DD460020B375 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		3DAD3E841DF850E9000B6D8A /* libRCTImage-tvOS.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1314,7 +1227,18 @@
 				0DA93AA818CE46009DFD648B /* Octicons.ttf in Resources */,
 				5C1BA2F861604F9CB87960D7 /* SimpleLineIcons.ttf in Resources */,
 				98A98C9ACFAF43F7AC45A7B6 /* Zocial.ttf in Resources */,
-				7E57D679E7AE4E7F8169684B /* Futura.ttc in Resources */,
+				6F4E17CA06004C5191238C00 /* Futura.ttc in Resources */,
+				5E0FB4135D2E44BBBC5E5CFC /* Futura Condensed Medium.ttc in Resources */,
+				CDCEE07BE8054B289028E2FA /* Futura Medium.ttc in Resources */,
+				B152AA2BB4054B79BEA60D29 /* Futura-CondensedMedium.ttc in Resources */,
+				FDD6757885624739B2D3CEF8 /* Futura-Medium.ttc in Resources */,
+				38F62AE6450C4A75BF7F8571 /* GillSans-LightItalic.ttc in Resources */,
+				7E7ED3A961C542BCAC34FD45 /* futura_medium.ttc in Resources */,
+				E6C35B56162A407B93F704BF /* Futura-Bold.ttf in Resources */,
+				6CCC9DA5061A4FA69FE00AC4 /* Futura-CondensedExtraBold.ttf in Resources */,
+				63CBAEABE6CE4529A7CBEB5C /* Futura-CondensedMedium.ttf in Resources */,
+				9C888B1838CC4074A55F2CAA /* Futura-Medium.ttf in Resources */,
+				36D80ADA1F454D68B214387D /* Futura-MediumItalic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
