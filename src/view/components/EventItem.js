@@ -26,11 +26,11 @@ export default class EventItem extends Component {
       introPath += "/";
 
     if(props.realImageSaved){
-      auxPos = 'relative';
+      auxRealPos = 'relative';
       auxOpaItem = 1;
     }
     else {
-      auxPos = 'absolute';
+      auxRealPos = 'absolute';
       auxOpaItem = 0;
     }
 
@@ -43,21 +43,21 @@ export default class EventItem extends Component {
       opaItem: new Animated.Value(auxOpaItem),
       needThumb: !props.realImageSaved,
       realImageSaved: props.realImageSaved,
-      realPosition: auxPos,
     }
   }
 
   componentDidMount(){
     if(!this.props.realImageSaved && !this.imageOverLocal){
-      this.props.mAdapter.saveLocalImage(this.props.item.id,`https://pausabe.com/apps/CBCN/images/prova1.jpg` /*TODO: alex integration this.props.item.image.real*/)
+      this.props.mAdapter.saveLocalImage(this.props.item.id, this.props.item.image.url_real)
       .then(()=>{
+        console.log("guapo");
         Animated.timing(this.state.opaItem,{
           toValue: 1,
           duration: 0
         }).start();
+
         this.setState({
           realImageSaved: true,
-          realPosition: 'absolute'
         });
       })
       .catch(error => {
@@ -71,7 +71,7 @@ export default class EventItem extends Component {
   }
 
   _onRealLoad(event){
-    // console.log("real "+this.props.item.id+" loaded. thumb loaded? "+this.thumbnailLoaded);
+    console.log("real "+this.props.item.id+" loaded. thumb loaded? "+this.thumbnailLoaded);
 
     this.realLoaded = true;
 
@@ -109,15 +109,15 @@ export default class EventItem extends Component {
       renderType = ""
 
       if(this.imageOverLocal){
-        renderType += "| online image";
-        if(this.state.needThumb) renderType += "| thumb";
+        renderType += "| imageOverLocal ";
+        if(this.state.needThumb) renderType += "| needThumb ";
       }
       else{
-        if(this.state.realImageSaved) renderType += "| real saved";
-        if(this.state.needThumb) renderType += "| thumb";
+        if(this.state.realImageSaved) renderType += "| realImageSaved ";
+        if(this.state.needThumb) renderType += "| needThumb ";
       }
 
-      // console.log("rendering item ("+this.props.item.id+") - "+renderType+". Container Opacity: "+this.state.opaItem._value);
+      //console.log("rendering item ("+this.props.item.id+") - |"+renderType+" || opaItem: "+this.state.opaItem._value);
 
       return(
         <Animated.View style={[{opacity:this.state.opaItem},Styles.eventItemContainer]}>
@@ -126,8 +126,8 @@ export default class EventItem extends Component {
             <View style={Styles.eventItemImageContainer}>
               {this.imageOverLocal?
                 <Animated.Image
-                  style={[{position:this.state.realPosition},Styles.eventItemImage]}
-                  source={{uri:`https://pausabe.com/apps/CBCN/images/prova1.jpg` /*TODO: alex integration this.props.item.image.real*/}}
+                  style={[{position: 'relative'},Styles.eventItemImage]}
+                  source={{uri: this.props.item.image.url_real}}
                   onError={this._onLoadError.bind(this,"real")}
                   onLoad={this._onRealLoad.bind(this)}
                 />
@@ -135,7 +135,7 @@ export default class EventItem extends Component {
                 <View>
                   {this.state.realImageSaved?
                     <Animated.Image
-                      style={[{position:this.state.realPosition},Styles.eventItemImage]}
+                      style={[{position:'relative'},Styles.eventItemImage]}
                       source={{isStatic:true,uri:this.uriPathReal}}
                       onError={this._onLoadError.bind(this,"real")}
                       onLoad={this._onRealLoad.bind(this)}
@@ -147,7 +147,7 @@ export default class EventItem extends Component {
               }
               {this.state.needThumb?
                 <Animated.Image
-                  style={[{opacity:this.state.opaThumb},Styles.eventItemImage]}
+                  style={[{position:this.state.realImageSaved? 'absolute':'relative', opacity:this.state.opaThumb},Styles.eventItemImage]}
                   blurRadius={2}
                   source={{isStatic:true, uri:this.uriPathThumb}}
                   onError={this._onLoadError.bind(this,"thumb")}
@@ -162,18 +162,18 @@ export default class EventItem extends Component {
             <View style={Styles.eventItemTextContainer}>
               <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 10}}>
                 <Text style={Styles.text_event_month}>
-                  {"FEB"}
+                  {this.Month_To_String(this.props.item.duration.start.month)}
                 </Text>
                 <Text style={Styles.text_event_day}>
-                  {"17"}
+                  {this.props.item.duration.start.day}
                 </Text>
               </View>
               <View style={{flex: 7, flexDirection: 'column', padding: 10,}}>
                 <Text style={Styles.text_event_title}>
-                  {"STEUBENVILLE CONFERENCE '18"/*TODO: alex integration this.props.item.title*/}
+                  {this.props.item.title}
                 </Text>
                 <Text style={Styles.text_event_subtitle}>
-                  {"Encounter with the love of Jesus Christ"/*TODO: alex integration this.props.item.subtitle*/}
+                  {this.props.item.subtitle}
                 </Text>
               </View>
             </View>
@@ -188,4 +188,51 @@ export default class EventItem extends Component {
       console.log("Error: ", e);
     }
   }
+
+  Month_To_String(month){
+    try {
+      switch (month) {
+        case '01':
+          return 'GEN';
+          break;
+        case '02':
+          return 'FEB';
+          break;
+        case '03':
+          return 'MAR';
+          break;
+        case '04':
+          return 'ABR';
+          break;
+        case '05':
+          return 'MAI';
+          break;
+        case '06':
+          return 'JUN';
+          break;
+        case '07':
+          return 'JUL';
+          break;
+        case '08':
+          return 'AGO';
+          break;
+        case '09':
+          return 'SET';
+          break;
+        case '10':
+          return 'OCT';
+          break;
+        case '11':
+          return 'NOV';
+          break;
+        case '12':
+          return 'DES';
+          break;
+      }
+    } catch (e) {
+      console.log("Error (EventItem / Month_To_String)",e);
+      return "";
+    }
+  }
+
 }

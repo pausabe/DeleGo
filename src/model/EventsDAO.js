@@ -70,8 +70,7 @@ export default class EventsDAO {
     for(i=0;i<pageData.length;i++){
       // console.log("descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.thumbnail);
       var singleProm = this.RNFS.downloadFile({
-        //TODO: alex integration
-        fromUrl: `https://pausabe.com/apps/CBCN/images/provaLQ1.jpg`,//pageData[i].image.thumbnail,
+        fromUrl: pageData[i].image.url_thumbnail,
         toFile: this.path+"/thumbnailEvent"+pageData[i].id+".jpg"
       });
       promises.push(singleProm.promise);
@@ -89,9 +88,10 @@ export default class EventsDAO {
   getEventsData(pageId,internet){
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
-    //const url = `https://pausabe.com/apps/CBCN/page${pageId}.json`;
 
     const url = `http://172.20.10.2:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
+
+    console.log("url to get events data: " + url);
 
     return this.RNFS.exists(pagePathSaved)
     .then((exists)=>{
@@ -192,6 +192,7 @@ export default class EventsDAO {
   }
 
   _throwError(errCode,localData){
+    console.log("oooh, error!");
     throw {errCode: errCode, localData: localData};
   }
 
@@ -242,6 +243,8 @@ export default class EventsDAO {
   saveLocalImage(itemId,imagePath/*,flatIndex*/){
     // var imageDestPath = this.path+"/local/images/"+flatIndex+"-image-"+itemId+".jpg";
     var imageDestPath = this.path+"/local/images/image-"+itemId+".jpg";
+
+    console.log("image destine: " + imageDestPath);
 
     return this.RNFS.mkdir(this.path+"/local/images",{NSURLIsExcludedFromBackupKey:true})
     /*.then(() => {
