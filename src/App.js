@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, TouchableOpacity, Button} from 'react-native';
+import {View, Text, TouchableOpacity, Button, Image} from 'react-native';
 import {TabNavigator, TabBarBottom, StackNavigator} from "react-navigation";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -17,13 +17,25 @@ const EventsStack = StackNavigator({
   EventsTab: {
     screen: EventsTab,
     navigationOptions: {
-      title: lang.events.tabTitle,
+      //title: lang.events.tabTitle,
       headerTitle: <HeaderBar />,
       headerStyle: Styles.headerBarContainer,
       tabBarIcon: ({ focused, tintColor }) => {
-        let iconName;
-        iconName = `ios-calendar${focused ? '' : '-outline'}`;
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+        //let iconName;
+        //iconName = `ios-calendar${focused ? '' : '-outline'}`;
+        //return <Ionicons name={iconName} size={25} color={tintColor} />;
+        return (
+          <View style={{padding: 10}}>
+            {focused?
+              <Image source={require('./utils/assets/images/calendar-pressed.png')}
+                          style={{flex: 1, resizeMode:'contain',}}/>
+                          :
+              <Image source={require('./utils/assets/images/calendar.png')}
+                          style={{flex: 1, resizeMode:'contain',}}/>
+            }
+          </View>
+        )
+
       },
       tabBarOnPress: (values) => {
         const { previousScene, scene, jumpToIndex } = values;
@@ -50,13 +62,25 @@ const GroupsStack = StackNavigator({
   GroupsTab: {
     screen: GroupsTab,
     navigationOptions: {
-      title: lang.groups.tabTitle,
+      //title: lang.groups.tabTitle,
       headerTitle: <HeaderBar />,
       headerStyle: Styles.headerBarContainer,
       tabBarIcon: ({ focused, tintColor }) => {
-        let iconName;
-        iconName = `ios-people${focused ? '' : '-outline'}`;
-        return <Ionicons name={iconName} size={25} color={tintColor} />;
+        //let iconName;
+        //iconName = `ios-people${focused ? '' : '-outline'}`;
+        //return <Ionicons name={iconName} size={25} color={tintColor} />;
+
+        return (
+          <View style={{padding: 10}}>
+            {focused?
+              <Image source={require('./utils/assets/images/people-pressed.png')}
+                          style={{flex: 1, resizeMode:'contain'}}/>
+              :
+              <Image source={require('./utils/assets/images/people.png')}
+                          style={{flex: 1, resizeMode:'contain'}}/>
+            }
+          </View>
+        )
       },
     }
   },
@@ -69,8 +93,9 @@ export default TabNavigator(
   },
   {
     tabBarOptions: {
-      activeTintColor: Colors.brandBlue,
-      inactiveTintColor: Colors.tabBarInactive,
+      showLabel: false,
+      //activeTintColor: Colors.brandBlue,
+      //inactiveTintColor: Colors.tabBarInactive,
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',

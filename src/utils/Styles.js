@@ -48,7 +48,7 @@ module.exports = StyleSheet.create({
     flexDirection: 'row',
   },
   text_event_month:{
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: 'Futura-Medium',
     color: Colors.brand,
   },
