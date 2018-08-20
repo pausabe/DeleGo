@@ -15,6 +15,7 @@ import ModelAdapter from "./adapters/EventsModelAdapter";
 import EventItem from "./components/EventItem";
 import Styles from '../utils/Styles';
 import Constants from '../utils/Constants';
+import FilterBar from './components/FilterBar';
 
 export default class EventsView extends Component {
   /*componentWillMount() {
@@ -256,48 +257,69 @@ export default class EventsView extends Component {
 
     try {
       return (
-        <View style={Styles.eventsListConainer}>
-          {this.state.internet?
-            <Text>hi ha internet</Text>
-            :
-            <Text>NO hi ha internet</Text>
-          }
-          {this.state.refreshing?
-            <Text>refreshing...</Text>
-            :
-            null
-          }
-          {!this.state.coolInternet?
-            <Text>Not cool internet</Text>
-            :
-            null
-          }
-          {this.state.firstLoad && !this.state.data.length?
-            this._firstLoadComponent()
-            :
-            <FlatList
-              ref={(ref) => { this.flatListRef = ref; }}
-              data={this.state.data}
-              renderItem={({ item, index }) => (
-                <EventItem
-                  realImageSaved={this.realImageSaved[item.id]}
-                  item={item}
-                  index={index}
-                  mAdapter={this.mAdapter}
-                  onPressItem={this.onPressItem.bind(this,item.id)}
-                />
-              )}
-              onScroll={this._handleOnScroll.bind(this)}
-              keyExtractor={item => item.id}
-              ListFooterComponent={this._renderFooter.bind(this)}
-              onRefresh={this._handleRefresh.bind(this)}
-              refreshing={this.state.refreshing}
-              onEndReached={this._handleLoadMore.bind(this)}
-              onEndReachedThreshold={0.8}
-            />
-          }
+
+
+
+        <View >
+          <View >
+            {this.state.internet?
+              <Text>hi ha internet</Text>
+              :
+              <Text>NO hi ha internet</Text>
+            }
+            {this.state.refreshing?
+              <Text>refreshing...</Text>
+              :
+              null
+            }
+            {!this.state.coolInternet?
+              <Text>Not cool internet</Text>
+              :
+              null
+            }
+          </View>
+
+          <FilterBar Refresh_List={this.Refresh_List.bind(this)}/>
+
+          <View style={Styles.eventsListConainer}>
+
+
+            {this.state.firstLoad && !this.state.data.length?
+              this._firstLoadComponent()
+              :
+              <FlatList
+                ref={(ref) => { this.flatListRef = ref; }}
+                data={this.state.data}
+                renderItem={({ item, index }) => (
+                  <EventItem
+                    realImageSaved={this.realImageSaved[item.id]}
+                    item={item}
+                    index={index}
+                    mAdapter={this.mAdapter}
+                    onPressItem={this.onPressItem.bind(this,item.id)}
+                  />
+                )}
+                onScroll={this._handleOnScroll.bind(this)}
+                keyExtractor={item => item.id}
+                ListFooterComponent={this._renderFooter.bind(this)}
+                onRefresh={this._handleRefresh.bind(this)}
+                refreshing={this.state.refreshing}
+                onEndReached={this._handleLoadMore.bind(this)}
+                onEndReachedThreshold={0.8}
+              />
+            }
+          </View>
         </View>
       );
+    }
+    catch (e) {
+      console.log("Error: ", e);
+    }
+  }
+
+  Refresh_List(first_selected, second_selected, third_selected, fourth_selected){
+    try {
+      this._handleRefresh();
     }
     catch (e) {
       console.log("Error: ", e);

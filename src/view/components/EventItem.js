@@ -122,7 +122,8 @@ export default class EventItem extends Component {
       return(
         <Animated.View style={[{opacity:this.state.opaItem},Styles.eventItemContainer]}>
           <TouchableOpacity
-            onPress={this.props.onPressItem}>
+            onPress={this.props.onPressItem}
+            activeOpacity={1}>
             <View style={Styles.eventItemImageContainer}>
               {this.imageOverLocal?
                 <Animated.Image

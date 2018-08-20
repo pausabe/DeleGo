@@ -89,7 +89,7 @@ export default class EventsDAO {
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
 
-    const url = `http://172.20.10.2:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
+    const url = `http://${Constants.local_ip}:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
 
     console.log("url to get events data: " + url);
 

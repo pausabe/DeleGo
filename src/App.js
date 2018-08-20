@@ -94,8 +94,6 @@ export default TabNavigator(
   {
     tabBarOptions: {
       showLabel: false,
-      //activeTintColor: Colors.brandBlue,
-      //inactiveTintColor: Colors.tabBarInactive,
     },
     tabBarComponent: TabBarBottom,
     tabBarPosition: 'bottom',

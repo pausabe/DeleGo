@@ -1,8 +1,8 @@
 import { Platform } from 'react-native'
 
 module.exports = {
-  //brandBlue: 'rgb(0, 136, 204)',
-  brand: 'rgb(114,51,207)',
+  brand_purple: 'rgb(114,51,207)',
+  brand_yellow: 'rgb(255,157,18)',
   tabBarInactive: 'grey',
   headerBarBackground: 'rgb(242, 242, 242)',
   tabBackground: 'rgba(242, 242, 242, 0.5)',
@@ -11,4 +11,5 @@ module.exports = {
   light_gray: 'rgb(217, 217, 217)',
   text_gray: 'gray',
   text_black: 'black',
+  text_white: 'white',
 };
