@@ -18,11 +18,11 @@ import Constants from '../utils/Constants';
 import FilterBar from './components/FilterBar';
 
 export default class EventsView extends Component {
-  /*componentWillMount() {
+  componentWillMount() {
     this.props.navigation.setParams({
       scrollToTop: this._onPressGoToTop.bind(this),
     });
-  }*/
+  }
 
   componentDidMount(){
     this.props.navigation.setParams({
@@ -45,10 +45,13 @@ export default class EventsView extends Component {
       refreshing: false,
       internet: null,
       firstLoad: true,
-      coolInternet: true
+      coolInternet: true,
     };
 
-    this.page = 1;//0;
+    this.current_refresh_is_by_button = false;
+    this.last_refresh_was_by_pull = false;
+
+    this.page = 1;
     this.realImageSaved = {};
     this.noMorePages = false;
     this.loadingMore = false;
@@ -165,20 +168,10 @@ export default class EventsView extends Component {
         refreshing: true
       },
       () => {
-        // if(this.state.internet){
-          this._handleRefreshBeforeGetEvents();
-        // }
-        /*else{
-          NetInfo.isConnected.fetch().then(isConnected => {
-            console.log('First, is ' + (isConnected ? 'online' : 'offline'));
-            if(isConnected){
-              this._handleRefreshBeforeGetEvents();
-            }
-            else{
-              this.setState({refreshing: false});
-            }
-          });
-        }*/
+        this.last_refresh_was_by_pull = !this.current_refresh_is_by_button;
+        this.current_refresh_is_by_button = false;
+
+        setTimeout(this._handleRefreshBeforeGetEvents.bind(this), 500);
       }
     );
   }
@@ -219,6 +212,7 @@ export default class EventsView extends Component {
 
   _handleOnScroll(e){
     var offset = e.nativeEvent.contentOffset.y;
+    //console.log("offset: " + offset);
     if(!this.hasScroll && offset>0){
       this.hasScroll = true;
     }
@@ -234,11 +228,27 @@ export default class EventsView extends Component {
         this.flatListRef.scrollToOffset({index: 0});
       }
       else{
-        //in a future I wish I could handle refresh here, but there is a bug and no always works (see trello)
-        /*console.log("SCROLL INFO: refresh (no scroll top nop)");
-        this._handleRefresh();*/
+        this.Button_Refresh();
       }
       this.hasScroll = false;
+    }
+  }
+
+  Button_Refresh(){
+    try {
+      console.log("button refresh");
+
+      if(this.last_refresh_was_by_pull){
+        this.flatListRef.scrollToOffset({index: 0});
+        this.flatListRef.scrollToOffset({offset: -60, animated: true });
+      }
+
+      this.current_refresh_is_by_button = true;
+
+      this._handleRefresh();
+    }
+    catch (e) {
+      console.log("Error:",e);
     }
   }
 
@@ -261,23 +271,25 @@ export default class EventsView extends Component {
 
 
         <View >
-          <View >
-            {this.state.internet?
-              <Text>hi ha internet</Text>
-              :
-              <Text>NO hi ha internet</Text>
-            }
-            {this.state.refreshing?
-              <Text>refreshing...</Text>
-              :
-              null
-            }
-            {!this.state.coolInternet?
-              <Text>Not cool internet</Text>
-              :
-              null
-            }
-          </View>
+          {false?
+            <View >
+              {this.state.internet?
+                <Text>hi ha internet</Text>
+                :
+                <Text>NO hi ha internet</Text>
+              }
+              {this.state.refreshing?
+                <Text>refreshing...</Text>
+                :
+                null
+              }
+              {!this.state.coolInternet?
+                <Text>Not cool internet</Text>
+                :
+                null
+              }
+            </View>
+            : null}
 
           <FilterBar Refresh_List={this.Refresh_List.bind(this)}/>
 
@@ -319,7 +331,7 @@ export default class EventsView extends Component {
 
   Refresh_List(first_selected, second_selected, third_selected, fourth_selected){
     try {
-      this._handleRefresh();
+      this.Button_Refresh();
     }
     catch (e) {
       console.log("Error: ", e);
