@@ -103,5 +103,21 @@ module.exports = StyleSheet.create({
     fontSize: 15,
     fontFamily: 'Futura-Medium',
     color: Colors.text_white,
+  },
+  text_events_details_day: {
+    fontSize: 13,
+    fontFamily: 'Futura-Medium',
+    color: Colors.text_black,
+  },
+  text_events_details_hour: {
+    fontSize: 13,
+    fontFamily: 'Futura-Medium',
+    color: Colors.text_gray,
+  },
+  text_events_details_description: {
+    fontSize: 13,
+    fontFamily: 'Futura-Medium',
+    color: Colors.text_gray,
+    textAlign:'justify', 
   }
 });

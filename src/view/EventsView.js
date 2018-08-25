@@ -206,8 +206,8 @@ export default class EventsView extends Component {
     );
   }
 
-  onPressItem(itemId){
-    this.props.onPressItem(itemId);
+  onPressItem(item){
+    this.props.onPressItem(item);
   }
 
   _handleOnScroll(e){
@@ -308,7 +308,7 @@ export default class EventsView extends Component {
                     item={item}
                     index={index}
                     mAdapter={this.mAdapter}
-                    onPressItem={this.onPressItem.bind(this,item.id)}
+                    onPressItem={this.onPressItem.bind(this,item)}
                   />
                 )}
                 onScroll={this._handleOnScroll.bind(this)}

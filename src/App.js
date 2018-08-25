@@ -53,6 +53,8 @@ const EventsStack = StackNavigator({
   EventDetails: {
     screen: EventDetailsView,
     navigationOptions: ({navigation}) => ({
+      headerTitle: <HeaderBar />,
+      headerStyle: Styles.headerBarContainer,
       tabBarVisible: false,
     })
   }

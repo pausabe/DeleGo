@@ -9,6 +9,7 @@ import {
  } from 'react-native';
 
 import Styles from '../../utils/Styles';
+import GF from '../../utils/GlobalFunctions';
 import Constants from '../../utils/Constants';
 
 export default class EventItem extends Component {
@@ -48,7 +49,7 @@ export default class EventItem extends Component {
 
   componentDidMount(){
     if(!this.props.realImageSaved && !this.imageOverLocal){
-      this.props.mAdapter.saveLocalImage(this.props.item.id, this.props.item.image.url_real)
+      this.props.mAdapter.saveLocalImage(this.props.item.id, `https://pausabe.com/apps/CBCN/images/prova1.jpg`/*this.props.item.image.url_real*/)
       .then(()=>{
         console.log("guapo");
         Animated.timing(this.state.opaItem,{
@@ -163,7 +164,7 @@ export default class EventItem extends Component {
             <View style={Styles.eventItemTextContainer}>
               <View style={{flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: 10}}>
                 <Text style={Styles.text_event_month}>
-                  {this.Month_To_String(this.props.item.duration.start.month)}
+                  {GF.Month_To_String(this.props.item.duration.start.month)}
                 </Text>
                 <Text style={Styles.text_event_day}>
                   {this.props.item.duration.start.day}
@@ -174,7 +175,7 @@ export default class EventItem extends Component {
                   {this.props.item.title}
                 </Text>
                 <Text style={Styles.text_event_subtitle}>
-                  {this.props.item.subtitle}
+                  {/*this.props.item.subtitle*/"Subtitle!!"}
                 </Text>
               </View>
             </View>
@@ -189,51 +190,4 @@ export default class EventItem extends Component {
       console.log("Error: ", e);
     }
   }
-
-  Month_To_String(month){
-    try {
-      switch (month) {
-        case '01':
-          return 'GEN';
-          break;
-        case '02':
-          return 'FEB';
-          break;
-        case '03':
-          return 'MAR';
-          break;
-        case '04':
-          return 'ABR';
-          break;
-        case '05':
-          return 'MAI';
-          break;
-        case '06':
-          return 'JUN';
-          break;
-        case '07':
-          return 'JUL';
-          break;
-        case '08':
-          return 'AGO';
-          break;
-        case '09':
-          return 'SET';
-          break;
-        case '10':
-          return 'OCT';
-          break;
-        case '11':
-          return 'NOV';
-          break;
-        case '12':
-          return 'DES';
-          break;
-      }
-    } catch (e) {
-      console.log("Error (EventItem / Month_To_String)",e);
-      return "";
-    }
-  }
-
 }

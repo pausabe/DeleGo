@@ -258,7 +258,7 @@ export default class EventsDAO {
           this.RNFS.unlink(this.path+"/local/images/"+flatIndex+"-image-"+exists.deleteId+".jpg");
         }*/
         return this.RNFS.downloadFile({
-          fromUrl:imagePath,
+          fromUrl: imagePath,
           toFile: imageDestPath
         }).promise;
       // }
