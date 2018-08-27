@@ -8,11 +8,12 @@ import {
   Dimensions,
   StyleSheet
 } from 'react-native';
-import MapView from 'react-native-maps';
+
+import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 
 import Styles from '../utils/Styles';
 import GF from '../utils/GlobalFunctions';
-
+import Constants from '../utils/Constants';
 import HR from './components/HR';
 
 export default class EventDetailsView extends Component {
@@ -91,6 +92,17 @@ export default class EventDetailsView extends Component {
                 </View>
                 <HR />
               </View>
+              <View style={{width: Dimensions.get('window').width, height: 200}}>
+                <MapView
+                  style={{...StyleSheet.absoluteFillObject}}
+                  initialRegion={{
+                    latitude: this.props.event.location.longitude,
+                    longitude: this.props.event.location.longitude,
+                    latitudeDelta: Constants.maps_latitude_delta,
+                    longitudeDelta: Constants.maps_longitude_delta,
+                  }}
+                />
+              </View>
             </ScrollView>
             :
             null
@@ -103,20 +115,6 @@ export default class EventDetailsView extends Component {
     }
   }
 }
-
-const styles = StyleSheet.create({
- container: {
-   ...StyleSheet.absoluteFillObject,
-   height: 400,
-   width: 400,
-   justifyContent: 'flex-end',
-   alignItems: 'center',
- },
- map: {
-   ...StyleSheet.absoluteFillObject,
- },
-});
-
 
 /*
 {

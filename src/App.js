@@ -17,13 +17,9 @@ const EventsStack = StackNavigator({
   EventsTab: {
     screen: EventsTab,
     navigationOptions: {
-      //title: lang.events.tabTitle,
       headerTitle: <HeaderBar />,
       headerStyle: Styles.headerBarContainer,
       tabBarIcon: ({ focused, tintColor }) => {
-        //let iconName;
-        //iconName = `ios-calendar${focused ? '' : '-outline'}`;
-        //return <Ionicons name={iconName} size={25} color={tintColor} />;
         return (
           <View style={{padding: 10}}>
             {focused?
@@ -64,14 +60,9 @@ const GroupsStack = StackNavigator({
   GroupsTab: {
     screen: GroupsTab,
     navigationOptions: {
-      //title: lang.groups.tabTitle,
       headerTitle: <HeaderBar />,
       headerStyle: Styles.headerBarContainer,
       tabBarIcon: ({ focused, tintColor }) => {
-        //let iconName;
-        //iconName = `ios-people${focused ? '' : '-outline'}`;
-        //return <Ionicons name={iconName} size={25} color={tintColor} />;
-
         return (
           <View style={{padding: 10}}>
             {focused?
