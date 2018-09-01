@@ -2,14 +2,11 @@ import { Platform, StyleSheet } from 'react-native';
 
 import Colors from '../utils/Colors';
 
-//var Dimensions = require('Dimensions');
-//var { width, height } = Dimensions.get('window');
-
 const EVENT_ITEM_PADDING = 12;
 const FILTER_TITLE_RADIUS = 15;
 
 module.exports = StyleSheet.create({
-  tabContainer: {
+  eventsTabContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -118,6 +115,35 @@ module.exports = StyleSheet.create({
     fontSize: 13,
     fontFamily: 'Futura-Medium',
     color: Colors.text_gray,
-    textAlign:'justify', 
-  }
+    textAlign:'justify',
+  },
+  text_events_details_subtitle:{
+    fontSize: 15,
+    fontFamily: 'Futura-Medium',
+    color: Colors.text_black,
+  },
+  text_events_details_direction:{
+    fontSize: 13,
+    fontFamily: 'Futura-Medium',
+    color: Colors.text_black,
+  },
+  groupsTabContainer: {
+    flex: 1,
+    backgroundColor: Colors.tabBackground,
+  },
+  groupItemContainer:{
+    backgroundColor: Colors.backgroundEventItem,
+    paddingHorizontal: 10,
+    paddingTop: 10,
+  },
+  text_group_title:{
+    fontSize: 23,
+    fontFamily: 'Futura-CondensedMedium',
+    color: Colors.text_black,
+  },
+  text_group_subtitle:{
+    fontSize: 13,
+    color: Colors.text_gray,
+    fontFamily: 'Futura-Medium',
+  },
 });

@@ -312,7 +312,7 @@ export default class EventsView extends Component {
                   />
                 )}
                 onScroll={this._handleOnScroll.bind(this)}
-                keyExtractor={item => item.id}
+                keyExtractor={item => item.id.toString()}
                 ListFooterComponent={this._renderFooter.bind(this)}
                 onRefresh={this._handleRefresh.bind(this)}
                 refreshing={this.state.refreshing}

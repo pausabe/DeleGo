@@ -46,14 +46,14 @@ export default class EventDetailsView extends Component {
   render() {
     try {
       return (
-        <View style={Styles.tabContainer}>
+        <View style={Styles.eventsTabContainer}>
           {this.state.real_image_checked?
             <ScrollView >
               <Image
                 style={{resizeMode: "cover", width: Dimensions.get('window').width, height: 200}}
                 source={{isStatic: true, uri: this.imagePath}}
               />
-              <View style={{paddingHorizontal: 15, }}>
+              <View style={{paddingHorizontal: 15, paddingBottom: 15}}>
                 <View style={{paddingTop: 10}}>
                   <Text style={Styles.text_event_title}>
                     {this.props.event.title}
@@ -69,8 +69,15 @@ export default class EventDetailsView extends Component {
                             resizeMode="contain"/>
                   </View>
                   <View style={{flex: 6, paddingLeft: 10, flexDirection: 'column', alignContent: 'center', alignSelf: 'center', }}>
-                    <Text style={Styles.text_events_details_day}>17 FEB 2018</Text>
-                    <Text style={Styles.text_events_details_hour}>21:00</Text>
+                    <Text style={Styles.text_events_details_day}>
+                      {this.props.event.duration.start.day}{" "}
+                      {GF.Month_To_String(this.props.event.duration.start.month)}{" "}
+                      {this.props.event.duration.start.year}
+                    </Text>
+                    <Text style={Styles.text_events_details_hour}>
+                      {this.props.event.duration.start.hour}{":"}
+                      {this.props.event.duration.start.minute}
+                    </Text>
                   </View>
                 </View>
                 <View style={{flexDirection: 'row', paddingBottom: 10}}>
@@ -80,17 +87,25 @@ export default class EventDetailsView extends Component {
                             resizeMode="contain"/>
                   </View>
                   <View style={{flex: 6, paddingLeft: 15, flexDirection: 'column', alignContent: 'center', alignSelf: 'center', }}>
-                    <Text style={Styles.text_events_details_day}>DELEJOVE BCN</Text>
-                    <Text style={Styles.text_events_details_hour}>C/Villaroel, 81</Text>
+                    <Text style={Styles.text_events_details_day}>{this.props.event.organizer.name}</Text>
+                    <Text style={Styles.text_events_details_hour}>{this.props.event.location.address.long}</Text>
                   </View>
                 </View>
                 <HR />
                 <View style={{paddingVertical: 15}}>
+                  <Text style={Styles.text_events_details_subtitle}>
+                    {"Descripció"}
+                  </Text>
                   <Text style={Styles.text_events_details_description}>
                     {"Cultivated who resolution connection motionless did occasional. Journey promise if it colonel. Can all mirth abode nor hills added. Them men does for body pure. Far end not horses remain sister. Mr parish is to he answer roused piqued afford sussex. It abode words began enjoy years no do ﻿no. Tried spoil as heart visit blush or. "}
                   </Text>
                 </View>
                 <HR />
+              </View>
+              <View style={{paddingHorizontal: 15, paddingBottom: 15}}>
+                <Text style={Styles.text_events_details_subtitle}>
+                  {"Com arribar-hi"}
+                </Text>
               </View>
               <View style={{width: Dimensions.get('window').width, height: 200}}>
                 <MapView
