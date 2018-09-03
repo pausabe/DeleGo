@@ -11,6 +11,8 @@ import {
   RefreshControl
 } from 'react-native';
 
+import EventEmitter from 'EventEmitter';
+
 import ModelAdapter from "./adapters/EventsModelAdapter";
 import EventItem from "./components/EventItem";
 import Styles from '../utils/Styles';
@@ -22,6 +24,8 @@ export default class EventsView extends Component {
     this.props.navigation.setParams({
       scrollToTop: this._onPressGoToTop.bind(this),
     });
+
+    this.eventEmitter = new EventEmitter();
   }
 
   componentDidMount(){
@@ -46,10 +50,14 @@ export default class EventsView extends Component {
       internet: null,
       firstLoad: true,
       coolInternet: true,
+      scroll_enabled: true,
     };
 
     this.current_refresh_is_by_button = false;
-    this.last_refresh_was_by_pull = false;
+    this.need_forced_animation = false;
+    this.refreshing_by_bottom_bar = false;
+    this.refreshing_by_filter = false;
+    this.refreshing_manually = false;
 
     this.page = 1;
     this.realImageSaved = {};
@@ -154,21 +162,30 @@ export default class EventsView extends Component {
       refreshing: false,
       firstLoad: false,
       coolInternet: true,
+      scroll_enabled: true,
     },()=>{
       this.loadingMore = false;
     });
   }
 
+  _handleManualRefresh(){
+    this.refreshing_manually = true;
+    this._handleRefresh();
+  }
+
   _handleRefresh(){
     console.log("handle refresssssssh!!");
+    if(this.refreshing_manually || this.refreshing_by_bottom_bar)
+      this.eventEmitter.emit('cant_refresh');
     console.log("setState 4");
     this.page = 1;
     this.setState(
       {
+        scroll_enabled: this.refreshing_manually,
         refreshing: true
       },
       () => {
-        this.last_refresh_was_by_pull = !this.current_refresh_is_by_button;
+        this.need_forced_animation = !this.current_refresh_is_by_button;
         this.current_refresh_is_by_button = false;
 
         setTimeout(this._handleRefreshBeforeGetEvents.bind(this), 500);
@@ -177,6 +194,11 @@ export default class EventsView extends Component {
   }
 
   _handleRefreshBeforeGetEvents(){
+    this.eventEmitter.emit('finish_refreshing');
+    this.refreshing_by_bottom_bar = false;
+    this.refreshing_by_filter = false;
+    this.refreshing_manually = false;
+
     this.noMorePages = false;
     this.hasScroll = false;
     this.realImageSaved = {};
@@ -191,7 +213,7 @@ export default class EventsView extends Component {
     if(!this.noMorePages && this.state.internet && data.distanceFromEnd>parseFloat("-150")){
       this.loadingMore = true;
       console.log("handle load more");
-      this.page +=1;
+      this.page += 1;
       this._getEventsData();
     }
   }
@@ -223,12 +245,17 @@ export default class EventsView extends Component {
 
   _onPressGoToTop(){
     if(!this.state.refreshing){
+      this.refreshing_by_bottom_bar = true;
       if(this.hasScroll){
         console.log("SCROLL INFO: scroll to top");
         this.flatListRef.scrollToOffset({index: 0});
       }
       else{
-        this.Button_Refresh();
+        if(!(this.refreshing_manually || this.refreshing_by_filter)){
+          setTimeout(() => {
+            this.Button_Refresh();
+          }, 250);
+        }
       }
       this.hasScroll = false;
     }
@@ -236,9 +263,7 @@ export default class EventsView extends Component {
 
   Button_Refresh(){
     try {
-      console.log("button refresh");
-
-      if(this.last_refresh_was_by_pull){
+      if(this.need_forced_animation){
         this.flatListRef.scrollToOffset({index: 0});
         this.flatListRef.scrollToOffset({offset: -60, animated: true });
       }
@@ -291,7 +316,9 @@ export default class EventsView extends Component {
             </View>
             : null}
 
-          <FilterBar Refresh_List={this.Refresh_List.bind(this)}/>
+          <FilterBar
+            Refresh_List={this.Refresh_List.bind(this)}
+            Event_Emitter={this.eventEmitter}/>
 
           <View style={Styles.eventsListConainer}>
 
@@ -311,10 +338,11 @@ export default class EventsView extends Component {
                     onPressItem={this.onPressItem.bind(this,item)}
                   />
                 )}
+                scrollEnabled={this.state.scroll_enabled}
                 onScroll={this._handleOnScroll.bind(this)}
                 keyExtractor={item => item.id.toString()}
                 ListFooterComponent={this._renderFooter.bind(this)}
-                onRefresh={this._handleRefresh.bind(this)}
+                onRefresh={this._handleManualRefresh.bind(this)}
                 refreshing={this.state.refreshing}
                 onEndReached={this._handleLoadMore.bind(this)}
                 onEndReachedThreshold={0.8}
@@ -331,6 +359,8 @@ export default class EventsView extends Component {
 
   Refresh_List(first_selected, second_selected, third_selected, fourth_selected){
     try {
+      //this.setState({scroll_enabled: false});
+      this.refreshing_by_filter = true;
       this.Button_Refresh();
     }
     catch (e) {
@@ -338,23 +368,3 @@ export default class EventsView extends Component {
     }
   }
 }
-
-/*comentant onRefresh i refreshing:
-refreshControl={
-   <RefreshControl
-       refreshing={this.state.refreshing}
-       onRefresh={this._handleRefresh.bind(this)}
-       tintColor="#000"
-       titleColor="#000"
-    />
- }
- */
-
-/*onViewableItemsChanged={({ viewableItems, changed }) => {
-    console.log("Visible items are", viewableItems);
-    console.log("Changed in this iteration", changed);
-  }}*/
-
-/*getItemLayout={(data, index) => (
-  { length: 50, offset: 50 * index, index }
-)}*/

@@ -18,6 +18,16 @@ export default class FilterBar extends Component {
    * 4/4 - 26-35
    ************************/
 
+  componentDidMount(){
+   this.props.Event_Emitter.addListener('finish_refreshing', this.Finish_Refreshing.bind(this));
+   this.props.Event_Emitter.addListener('cant_refresh', this.Cant_Refresh.bind(this));
+  }
+
+  componentWillUnmount(){
+   this.props.Event_Emitter.removeListener('finish_refreshing', this.Finish_Refreshing.bind(this));
+   this.props.Event_Emitter.removeListener('cant_refresh', this.Cant_Refresh.bind(this));
+  }
+
   constructor(props){
     super(props);
 
@@ -27,6 +37,22 @@ export default class FilterBar extends Component {
       third_selected: false,
       fourth_selected: false,
     }
+
+    this.can_Refresh = true;
+    this.is_Refreshing = false;
+  }
+
+  Cant_Refresh(){
+    console.log("CAAAANT");
+    this.can_Refresh = false;
+  }
+
+  Finish_Refreshing(){
+    setTimeout(() => {
+      this.is_Refreshing = false;
+      this.can_Refresh = true;
+      console.log("CAN");
+    }, 500);
   }
 
   render() {
@@ -79,8 +105,11 @@ export default class FilterBar extends Component {
 
   First_Pressed(){
     try {
-      this.setState({first_selected: !this.state.first_selected});
-      this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      if(!this.is_Refreshing && this.can_Refresh){
+        this.is_Refreshing = true;
+        this.setState({first_selected: !this.state.first_selected});
+        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      }
     }
     catch (e) {
       console.log("error",e)
@@ -89,8 +118,14 @@ export default class FilterBar extends Component {
 
   Second_Pressed(){
     try {
-      this.setState({second_selected: !this.state.second_selected});
-      this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      if(!this.is_Refreshing && this.can_Refresh){
+        this.is_Refreshing = true;
+        this.setState({second_selected: !this.state.second_selected});
+        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      }
+      else{
+        console.log("TRIED!!!!!");
+      }
     }
     catch (e) {
       console.log("error",e)
@@ -99,8 +134,11 @@ export default class FilterBar extends Component {
 
   Third_Pressed(){
     try {
-      this.setState({third_selected: !this.state.third_selected});
-      this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      if(!this.is_Refreshing && this.can_Refresh){
+        this.is_Refreshing = true;
+        this.setState({third_selected: !this.state.third_selected});
+        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      }
     }
     catch (e) {
       console.log("error",e)
@@ -109,8 +147,11 @@ export default class FilterBar extends Component {
 
   Fourth_Pressed(){
     try {
-      this.setState({fourth_selected: !this.state.fourth_selected});
-      this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      if(!this.is_Refreshing && this.can_Refresh){
+        this.is_Refreshing = true;
+        this.setState({fourth_selected: !this.state.fourth_selected});
+        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+      }
     }
     catch (e) {
       console.log("error",e)
