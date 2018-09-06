@@ -68,9 +68,9 @@ export default class EventsDAO {
   downloadThumbnails(pageData,localData){
     var promises = [];
     for(i=0;i<pageData.length;i++){
-      // console.log("descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.thumbnail);
+      //console.log("descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.url_thumbnail);
       var singleProm = this.RNFS.downloadFile({
-        fromUrl: pageData[i].image.url_thumbnail,
+        fromUrl: "https://pausabe.com/apps/CBCN/images/prova1LQ.jpg",//pageData[i].image.url_thumbnail,
         toFile: this.path+"/thumbnailEvent"+pageData[i].id+".jpg"
       });
       promises.push(singleProm.promise);

@@ -8,7 +8,8 @@ import {
   FlatList,
   ActivityIndicator,
   NetInfo,
-  RefreshControl
+  RefreshControl,
+  Animated
 } from 'react-native';
 
 import EventEmitter from 'EventEmitter';
@@ -51,6 +52,7 @@ export default class EventsView extends Component {
       firstLoad: true,
       coolInternet: true,
       scroll_enabled: true,
+      filter_hidden: new Animated.Value(0)
     };
 
     this.current_refresh_is_by_button = false;
@@ -164,7 +166,7 @@ export default class EventsView extends Component {
       coolInternet: true,
       scroll_enabled: true,
     },()=>{
-      this.loadingMore = false;
+      setTimeout(() => this.loadingMore = false, 500);
     });
   }
 
@@ -210,7 +212,7 @@ export default class EventsView extends Component {
     var boolResult = data.distanceFromEnd>parseFloat("-150");
     console.log("checking... ",boolResult);
 
-    if(!this.noMorePages && this.state.internet && data.distanceFromEnd>parseFloat("-150")){
+    if(!this.loadingMore && !this.noMorePages && this.state.internet && data.distanceFromEnd>parseFloat("-150")){
       this.loadingMore = true;
       console.log("handle load more");
       this.page += 1;
@@ -240,6 +242,25 @@ export default class EventsView extends Component {
     }
     else if(this.hasScroll && offset === 0){
       this.hasScroll = false;
+    }
+
+    //console.log("filter_hidden",this.state.filter_hidden);
+
+    if(!this.state.refreshing && this.state.filter_hidden._value == 0 && offset > 1){
+      //this.setState({filter_hidden: true});
+      console.log("hide");
+      Animated.timing(this.state.filter_hidden,{
+        toValue: -48,
+        duration: 250
+      }).start();
+    }
+    if(!this.state.refreshing && this.state.filter_hidden._value == -48 && offset < 1){
+      //this.setState({filter_hidden: false});
+      console.log("no hide");
+      Animated.timing(this.state.filter_hidden,{
+        toValue: 0,
+        duration: 250
+      }).start();
     }
   }
 
@@ -316,11 +337,13 @@ export default class EventsView extends Component {
             </View>
             : null}
 
-          <FilterBar
-            Refresh_List={this.Refresh_List.bind(this)}
-            Event_Emitter={this.eventEmitter}/>
+          <Animated.View style={{marginTop: this.state.filter_hidden}}>
+            <FilterBar
+              Refresh_List={this.Refresh_List.bind(this)}
+              Event_Emitter={this.eventEmitter}/>
+          </Animated.View>
 
-          <View style={Styles.eventsListConainer}>
+          <View style={{paddingBottom: 0}}>
 
 
             {this.state.firstLoad && !this.state.data.length?
@@ -345,7 +368,7 @@ export default class EventsView extends Component {
                 onRefresh={this._handleManualRefresh.bind(this)}
                 refreshing={this.state.refreshing}
                 onEndReached={this._handleLoadMore.bind(this)}
-                onEndReachedThreshold={0.8}
+                onEndReachedThreshold={1.0}
               />
             }
           </View>
