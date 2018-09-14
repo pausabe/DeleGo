@@ -247,19 +247,16 @@ export default class EventsView extends Component {
     //console.log("filter_hidden",this.state.filter_hidden);
 
     if(!this.state.refreshing && this.state.filter_hidden._value == 0 && offset > 1){
-      //this.setState({filter_hidden: true});
-      console.log("hide");
       Animated.timing(this.state.filter_hidden,{
         toValue: -48,
         duration: 250
       }).start();
     }
+
     if(!this.state.refreshing && this.state.filter_hidden._value == -48 && offset < 1){
-      //this.setState({filter_hidden: false});
-      console.log("no hide");
       Animated.timing(this.state.filter_hidden,{
         toValue: 0,
-        duration: 250
+        duration: 500
       }).start();
     }
   }
@@ -368,7 +365,7 @@ export default class EventsView extends Component {
                 onRefresh={this._handleManualRefresh.bind(this)}
                 refreshing={this.state.refreshing}
                 onEndReached={this._handleLoadMore.bind(this)}
-                onEndReachedThreshold={1.0}
+                onEndReachedThreshold={0.01}
               />
             }
           </View>
