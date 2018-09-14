@@ -8,8 +8,8 @@ const FILTER_TITLE_RADIUS = 15;
 module.exports = StyleSheet.create({
   eventsTabContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    //justifyContent: 'center',
+    //alignItems: 'center',
     backgroundColor: Colors.tabBackground,
   },
   normalText: {
