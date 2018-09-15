@@ -104,6 +104,7 @@ export default class CustomList extends Component {
         this._getEventsData();
         break;
       case "Groups":
+      console.log("["+this.props.ListType+"] (2) page", this.page);
         this._getGroupsData();
         break;
     }
@@ -214,8 +215,8 @@ export default class CustomList extends Component {
     //console.log("handle refresssssssh!!");
     if(this.refreshing_manually || this.refreshing_by_bottom_bar)
       this.eventEmitter.emit('cant_refresh');
-    //console.log("setState 4");
     this.page = 1;
+    console.log("["+this.props.ListType+"] (1) page", this.page);
     this.setState(
       {
         scroll_enabled: this.refreshing_manually,
@@ -243,13 +244,11 @@ export default class CustomList extends Component {
   }
 
   _handleLoadMore(data){
-    //console.log("they are asking me to load more: ",data.distanceFromEnd);
-    //var boolResult = data.distanceFromEnd>parseFloat("-150");
-    //console.log("checking... ",boolResult);
+    console.log("["+this.props.ListType+"] they are asking me to load more: ",data.distanceFromEnd);
 
-    if(!this.loadingMore && !this.noMorePages && this.state.internet && data.distanceFromEnd>parseFloat("-150")){
+    if(!this.state.refreshing && !this.loadingMore && !this.noMorePages && this.state.internet /*&& data.distanceFromEnd>parseFloat("-200")*/){
       this.loadingMore = true;
-      //console.log("handle load more");
+      console.log("["+this.props.ListType+"] handle load more");
       this.page += 1;
       this._getItemsData();
     }
