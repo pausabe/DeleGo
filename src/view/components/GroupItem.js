@@ -15,7 +15,7 @@ import HR from './HR';
 const IMAGE_SIZE = 100;
 const BUTTON_SIZE = 25;
 
-export default class GroupsView extends Component {
+export default class GroupItem extends Component {
   constructor(props){
     super(props);
 
@@ -25,7 +25,7 @@ export default class GroupsView extends Component {
     if(Platform.OS==='ios')
       introPath += "/";
 
-    this.uriPathImage = `${introPath}${this.RNFS.DocumentDirectoryPath}/events/local/images/image-${props.id}.jpg`;
+    this.uriPathImage = `${introPath}${this.RNFS.DocumentDirectoryPath}/groups/group${props.item.id}.jpg`;
   }
 
   onPlacePress(){
@@ -67,8 +67,8 @@ export default class GroupsView extends Component {
               />
             </View>
             <View style={{paddingHorizontal: 15, paddingRight: IMAGE_SIZE}}>
-              <Text style={Styles.text_group_title}>{this.props.name}</Text>
-              <Text style={Styles.text_group_subtitle}>{this.props.description}</Text>
+              <Text style={Styles.text_group_title}>{this.props.item.name}</Text>
+              <Text style={Styles.text_group_subtitle}>{this.props.item.description}</Text>
               <View style={{alignItems: 'center'}}>
                 <View style={{paddingTop: 5, flexDirection: 'row', alignItems: 'center'}}>
                   <TouchableOpacity

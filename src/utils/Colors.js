@@ -13,4 +13,6 @@ module.exports = {
   text_gray: 'gray',
   text_black: 'black',
   text_white: 'white',
+  filter_background_events: 'transparent',
+  filter_background_groups: 'white',
 };

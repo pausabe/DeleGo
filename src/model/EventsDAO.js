@@ -7,7 +7,7 @@ export default class EventsDAO {
     this.RNFS = require('react-native-fs');
 
     this.path = this.RNFS.DocumentDirectoryPath+"/events";
-    console.log("path DAO",this.path);
+    console.log("[Events] path DAO",this.path);
   }
 
   _savePage(pageId){
@@ -15,10 +15,10 @@ export default class EventsDAO {
     const destPath = this.path+"/local/page"+pageId+".json";
 
     var promise = this.RNFS.exists(destPath).then((exists) => {
-      console.log("saving page "+pageId);
+      console.log("[Events] saving page "+pageId);
       if(exists){
         this.RNFS.unlink(destPath).then(() => {
-          console.log("file deleted");
+          console.log("[Events] file deleted");
           this.RNFS.moveFile(filepath,destPath);
         })
       }
@@ -31,7 +31,7 @@ export default class EventsDAO {
   }
 
   _checkPage(pageData, pageId){
-    if(pageId > Constants.localPages) return {local:false,eventsData:pageData};
+    if(pageId > Constants.local_event_pages) return {local:false,eventsData:pageData};
     else{
       var pagePath = this.path+"/local/page"+pageId+".json";
       return this.RNFS.exists(pagePath)
@@ -68,7 +68,7 @@ export default class EventsDAO {
   downloadThumbnails(pageData,localData){
     var promises = [];
     for(i=0;i<pageData.length;i++){
-      //console.log("descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.url_thumbnail);
+      //console.log("[Events] descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.url_thumbnail);
       var singleProm = this.RNFS.downloadFile({
         fromUrl: "https://pausabe.com/apps/CBCN/images/prova1LQ.jpg",//pageData[i].image.url_thumbnail,
         toFile: this.path+"/thumbnailEvent"+pageData[i].id+".jpg"
@@ -91,7 +91,7 @@ export default class EventsDAO {
 
     const url = `http://${Constants.local_ip}:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
 
-    console.log("url to get events data: " + url);
+    console.log("[Events] url to get events data: " + url);
 
     return this.RNFS.exists(pagePathSaved)
     .then((exists)=>{
@@ -127,7 +127,7 @@ export default class EventsDAO {
           return this._checkPage(eventsData,pageId);
         })
         .then(checkRes => {
-          console.log("checkRes",checkRes);
+          console.log("[Events] checkRes",checkRes);
           if(checkRes.local){
             return checkRes.eventsData;
           }
@@ -144,14 +144,14 @@ export default class EventsDAO {
           for(i=0;i<newIds.length;i++){
             falseReturn[newIds[i]] = false;
           }
-          if(pageId > Constants.localPages) {
+          if(pageId > Constants.local_event_pages) {
             return {eventsData: eventsData, realImageSaved: falseReturn};
           }
           else {
             return this._realImagesExist(newIds,this.path+"/local/images/")
             .then((realExists) => {
               if(realExists){
-                console.log("realExists",realExists);
+                console.log("[Events] realExists",realExists);
                 if(realExists.deleteIds.length > 0){
                   return this._deleteImages(realExists.deleteIds)
                   .then(() => {
@@ -170,8 +170,8 @@ export default class EventsDAO {
           }
         });
       }
-      else if(pageId <= Constants.localPages){
-        console.log("handling no internet but maybe local data");
+      else if(pageId <= Constants.local_event_pages){
+        console.log("[Events] handling no internet but maybe local data");
 
         var newIds = [];
         for(i=0;i<localData.length;i++){
@@ -192,19 +192,19 @@ export default class EventsDAO {
   }
 
   _throwError(errCode,localData){
-    console.log("oooh, error!");
+    console.log("[Events] oooh, error!");
     throw {errCode: errCode, localData: localData};
   }
 
   _deleteImages(imageIds){
-    console.log("imageIds",imageIds);
+    console.log("[Events] imageIds",imageIds);
     var promises = [];
     for(i=0;i<imageIds.length;i++){
       var auxImagePath = this.path+"/local/images/image-"+imageIds[i]+".jpg";
       console.log("should delte:",imageIds[i]);
       promises.push(this.RNFS.unlink(auxImagePath));
     }
-    // console.log("promises",promises);
+    // console.log("[Events] promises",promises);
     return Promise.all(promises);
   }
 
@@ -232,8 +232,8 @@ export default class EventsDAO {
             oldContainsNew[oldIds[i]] = true;
           }
         }
-        console.log("distinctIds",distinctIds);
-        console.log("oldContainsNew",oldContainsNew);
+        console.log("[Events] distinctIds",distinctIds);
+        console.log("[Events] oldContainsNew",oldContainsNew);
         return {bools:oldContainsNew,deleteIds:distinctIds};
       }
       return false;
@@ -244,7 +244,7 @@ export default class EventsDAO {
     // var imageDestPath = this.path+"/local/images/"+flatIndex+"-image-"+itemId+".jpg";
     var imageDestPath = this.path+"/local/images/image-"+itemId+".jpg";
 
-    console.log("image destine: " + imageDestPath);
+    console.log("[Events] image destine: " + imageDestPath);
 
     return this.RNFS.mkdir(this.path+"/local/images",{NSURLIsExcludedFromBackupKey:true})
     /*.then(() => {
@@ -253,7 +253,7 @@ export default class EventsDAO {
     .then((/*exists*/) => {
       /*console.log("exists",exists);
       if(!exists.bool){*/
-        console.log("descarregant real ("+itemId+"): ",imagePath);
+        console.log("[Events] descarregant real ("+itemId+"): ",imagePath);
         /*if(exists.deleteId !== -1){
           this.RNFS.unlink(this.path+"/local/images/"+flatIndex+"-image-"+exists.deleteId+".jpg");
         }*/

@@ -20,7 +20,7 @@ export default class EventItem extends Component {
 
     this.realLoaded = false;
     this.thumbnailLoaded = false;
-    this.imageOverLocal = props.index >= (Constants.eventsPerPage*Constants.localPages);
+    this.imageOverLocal = props.index >= (Constants.eventsPerPage*Constants.local_event_pages);
 
     var introPath = "file://";
     if(Platform.OS==='ios')

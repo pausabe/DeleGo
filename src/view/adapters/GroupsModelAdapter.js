@@ -1,12 +1,8 @@
-import EventsDAO from '../../model/EventsDAO';
-const dataAcc = new EventsDAO();
+import GroupsDAO from '../../model/GroupsDAO';
+const dataAcc = new GroupsDAO();
 
-export default class EventsModelAdapter {
-  getEventsData(pageId,internet){
-    return dataAcc.getEventsData(pageId,internet);
-  }
-
-  saveLocalImage(itemId,imagePath){
-    return dataAcc.saveLocalImage(itemId,imagePath);
+export default class GroupsModelAdapter {
+  getGroupsData(pageId, internet){
+    return dataAcc.getGroupsData(pageId, internet);
   }
 }

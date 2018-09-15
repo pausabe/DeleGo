@@ -67,7 +67,7 @@ module.exports = StyleSheet.create({
   filterBar_container: {
     flexDirection: 'row',
     alignItems: 'center',
-    margin: EVENT_ITEM_PADDING
+    padding: EVENT_ITEM_PADDING,
   },
   filter_name_container_normal:{
     flex: 1,

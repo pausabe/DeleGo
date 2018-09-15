@@ -36,13 +36,14 @@ const EventsStack = StackNavigator({
       tabBarOnPress: (values) => {
         const { previousScene, scene, jumpToIndex } = values;
 
-        // console.log("scene",scene);
+        //console.log("events scene",scene);
 
         if(scene.focused){
           scene.route.routes[0].params.scrollToTop();
         }
-
-        jumpToIndex(scene.route.index);
+        else{
+          jumpToIndex(scene.index);
+        }
       },
     },
   },
@@ -75,7 +76,19 @@ const GroupsStack = StackNavigator({
           </View>
         )
       },
-    }
+      tabBarOnPress: (values) => {
+        const { previousScene, scene, jumpToIndex } = values;
+
+        //console.log("groups scene",scene);
+
+        if(scene.focused){
+          scene.route.routes[0].params.scrollToTop();
+        }
+        else{
+          jumpToIndex(scene.index);
+        }
+      },
+    },
   },
 });
 

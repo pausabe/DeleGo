@@ -13,6 +13,7 @@ import {
 
 import EventEmitter from 'EventEmitter';
 import EventItem from "./EventItem";
+import GroupItem from "./GroupItem";
 import Styles from '../../utils/Styles';
 import Constants from '../../utils/Constants';
 import FilterBar from './FilterBar';
@@ -64,6 +65,11 @@ export default class CustomList extends Component {
     this.noMorePages = false;
     this.loadingMore = false;
     this.hasScroll = false;
+
+    //Force Groups to update internet connection info at first load
+    if(this.props.ListType == "Groups"){
+      NetInfo.getConnectionInfo().then((connectionInfo) => this._handleConnectionChange(connectionInfo));
+    }
   }
 
   _handleConnectionChange(connectionInfo){
@@ -80,7 +86,9 @@ export default class CustomList extends Component {
       //console.log("setState 7");
       // this.page = 1;
       this.setState({/*data: [],*/internet: connectionInfo.type!=='none'},()=>{
-        if(this.state.firstLoad) this._handleRefresh();
+        if(this.state.firstLoad) {
+          this._handleRefresh();
+        }
       });
 
     }
@@ -102,15 +110,30 @@ export default class CustomList extends Component {
   }
 
   _getGroupsData(){
-    //TODO
+    console.log("[Groups] requested page n: "+this.page);
+    this.mAdapter.getGroupsData(this.page, this.state.internet)
+    .then((res)=>{
+      if(res){
+        console.log("data page "+this.page,res);
+
+        this._updateNewData(res.groupsData);
+      }
+      else{
+        //No internet connection and no local data
+        console.log("[Groups] No internet connection and no local data");
+      }
+    })
+    .catch((error) => {
+      _manage_Get_Items_Data_Error(error);
+    });
   }
 
   _getEventsData(){
-    //console.log("requested page n: "+this.page);
+    //console.log("[Events] requested page n: "+this.page);
     this.mAdapter.getEventsData(this.page,this.state.internet)
     .then((res)=>{
       if(res){
-        //console.log("data page "+this.page,res);
+        //console.log("[Events] data page "+this.page,res);
 
         for(var key in res.realImageSaved){
           if(res.realImageSaved.hasOwnProperty(key)){
@@ -126,41 +149,45 @@ export default class CustomList extends Component {
       }
     })
     .catch((error) => {
-      if(error.errCode === 'no-page'){
-        //console.log("getEventsData Catch -> no-page",error);
-        this.noMorePages = true;
-        //console.log("setState 2");
-        this.page -= 1;
-        this.setState({ refreshing: false });
-      }
-      else if(error.errCode === 'time-out'){
-        //console.log("getEventsData Catch -> time-out",error);
-        //si és la "primera carregada" mostrar contingut offline
-        if(this.state.firstLoad && error.localData){
-          //console.log("time-out first load and data not null");
+      _manage_Get_Items_Data_Error(error);
+    });
+  }
 
-          var ids = [];
-          for(i=0;i<error.localData.length;i++){
-            ids.push(parseInt(error.localData[i].id));
-          }
-          var trueReturn = {};
-          for(i=0;i<ids.length;i++){
-            this.realImageSaved[ids[i]] = true;
-          }
+  _manage_Get_Items_Data_Error(error){
+    if(error.errCode === 'no-page'){
+      //console.log("getEventsData Catch -> no-page",error);
+      this.noMorePages = true;
+      //console.log("setState 2");
+      this.page -= 1;
+      this.setState({ refreshing: false });
+    }
+    else if(error.errCode === 'time-out'){
+      //console.log("getEventsData Catch -> time-out",error);
+      //si és la "primera carregada" mostrar contingut offline
+      if(this.state.firstLoad && error.localData){
+        //console.log("time-out first load and data not null");
 
-          this.setState({ coolInternet: false, data: error.localData });
-          this._getItemsData();
+        var ids = [];
+        for(i=0;i<error.localData.length;i++){
+          ids.push(parseInt(error.localData[i].id));
         }
-        else{
-          this.setState({ coolInternet: false });
-          this._getItemsData();
+        var trueReturn = {};
+        for(i=0;i<ids.length;i++){
+          this.realImageSaved[ids[i]] = true;
         }
+
+        this.setState({ coolInternet: false, data: error.localData });
+        this._getItemsData();
       }
       else{
-        //console.log("getEventsData Error: ",error);
-        this.setState({ internet: false, refreshing: false });
+        this.setState({ coolInternet: false });
+        this._getItemsData();
       }
-    });
+    }
+    else{
+      //console.log("getEventsData Error: ",error);
+      this.setState({ internet: false, refreshing: false });
+    }
   }
 
   _updateNewData(data){
@@ -319,12 +346,15 @@ export default class CustomList extends Component {
 
   render() {
     try {
+      if(this.props.ListType === "Events")
+        console.log("GROUPS RENDER");
       return (
         <View >
           <Animated.View style={{marginTop: this.state.filter_hidden}}>
             <FilterBar
               Refresh_List={this.Refresh_List.bind(this)}
-              Event_Emitter={this.eventEmitter}/>
+              Event_Emitter={this.eventEmitter}
+              BackgroundColor={this.props.FilterBackgroundColor}/>
           </Animated.View>
 
           <View style={{paddingBottom: 0}}>
@@ -335,13 +365,22 @@ export default class CustomList extends Component {
                 ref={(ref) => { this.flatListRef = ref; }}
                 data={this.state.data}
                 renderItem={({ item, index }) => (
-                  <EventItem
-                    realImageSaved={this.realImageSaved[item.id]}
-                    item={item}
-                    index={index}
-                    mAdapter={this.mAdapter}
-                    onPressItem={this.onPressItem.bind(this,item)}
-                  />
+                  <View>
+                    {this.props.ListType === "Events"?
+                      <EventItem
+                        realImageSaved={this.realImageSaved[item.id]}
+                        item={item}
+                        index={index}
+                        mAdapter={this.mAdapter}
+                        onPressItem={this.onPressItem.bind(this,item)}
+                      />
+                    :
+                      <GroupItem
+                        item={item}
+                        index={index}
+                      />
+                    }
+                  </View>
                 )}
                 scrollEnabled={this.state.scroll_enabled}
                 onScroll={this._handleOnScroll.bind(this)}

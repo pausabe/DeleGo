@@ -1,6 +1,7 @@
 module.exports = {
   events_per_page: 4,
-  localPages: 1,
+  local_event_pages: 1,
+  groups_per_page: 6,
   //local_ip: '192.168.1.130', //wifi
   local_ip: '192.168.1.135', //eth
   //local_ip: '172.20.10.2', //mobil

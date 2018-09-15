@@ -5,6 +5,7 @@ import {
 } from 'react-native';
 
 import Styles from '../utils/Styles';
+import Colors from '../utils/Colors';
 import EventItem from './components/GroupItem';
 import CustomList from './components/CustomList';
 import ModelAdapter from "./adapters/EventsModelAdapter";
@@ -25,6 +26,7 @@ export default class EventsView extends Component {
               navigation={this.props.navigation}
               mAdapter={this.mAdapter}
               onPressItem={this.props.onPressItem.bind(this)}
+              FilterBackgroundColor={Colors.filter_background_events}
             />
         </View>
       );

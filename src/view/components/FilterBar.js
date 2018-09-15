@@ -43,7 +43,7 @@ export default class FilterBar extends Component {
   }
 
   Cant_Refresh(){
-    console.log("CAAAANT");
+    //console.log("CAAAANT");
     this.can_Refresh = false;
   }
 
@@ -51,14 +51,14 @@ export default class FilterBar extends Component {
     setTimeout(() => {
       this.is_Refreshing = false;
       this.can_Refresh = true;
-      console.log("CAN");
+      //console.log("CAN");
     }, 500);
   }
 
   render() {
     try {
       return(
-        <View style={Styles.filterBar_container}>
+        <View style={[Styles.filterBar_container, {backgroundColor: this.props.BackgroundColor}]}>
           {this.state.first_selected?
             <TouchableOpacity style={[Styles.filter_name_container_selected, {marginRight: MARGIN_RIGHT}]} activeOpacity={ITEM_OPACITY_SELECTION} onPress={this.First_Pressed.bind(this)}>
               <Text style={Styles.text_filter_name_selected}>{'DELE'}</Text>
@@ -122,9 +122,6 @@ export default class FilterBar extends Component {
         this.is_Refreshing = true;
         this.setState({second_selected: !this.state.second_selected});
         this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
-      }
-      else{
-        console.log("TRIED!!!!!");
       }
     }
     catch (e) {
