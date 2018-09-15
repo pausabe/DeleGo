@@ -143,4 +143,10 @@ module.exports = StyleSheet.create({
     color: Colors.text_gray,
     fontFamily: 'Futura-Medium',
   },
+  text_no_internet:{
+    fontSize: 15,
+    fontFamily: 'Futura-Medium',
+    textAlign: 'center',
+    color: 'red',
+  },
 });

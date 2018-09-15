@@ -11,6 +11,7 @@ var Dimensions = require('Dimensions');
 var { width, height } = Dimensions.get('window');
 
 export default class HeaderBar extends Component {
+
   render() {
     return(
       <View style={{height: null, width: null, paddingVertical: 0, marginLeft: Platform.OS === 'android'? -width/1.5 : 0}}>

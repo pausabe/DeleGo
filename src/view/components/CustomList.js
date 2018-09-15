@@ -18,6 +18,7 @@ import Styles from '../../utils/Styles';
 import Constants from '../../utils/Constants';
 import FilterBar from './FilterBar';
 import LoadingFooter from './LoadingFooter';
+import NoInternet from './NoInternet';
 
 export default class CustomList extends Component {
   componentWillMount() {
@@ -125,7 +126,7 @@ export default class CustomList extends Component {
       }
     })
     .catch((error) => {
-      _manage_Get_Items_Data_Error(error);
+      this._manage_Get_Items_Data_Error(error);
     });
   }
 
@@ -150,7 +151,7 @@ export default class CustomList extends Component {
       }
     })
     .catch((error) => {
-      _manage_Get_Items_Data_Error(error);
+      this._manage_Get_Items_Data_Error(error);
     });
   }
 
@@ -345,16 +346,20 @@ export default class CustomList extends Component {
 
   render() {
     try {
-      if(this.props.ListType === "Events")
-        console.log("GROUPS RENDER");
       return (
         <View >
-          <Animated.View style={{marginTop: this.state.filter_hidden}}>
-            <FilterBar
-              Refresh_List={this.Refresh_List.bind(this)}
-              Event_Emitter={this.eventEmitter}
-              BackgroundColor={this.props.FilterBackgroundColor}/>
-          </Animated.View>
+          <View>
+            {this.state.internet !== null && !this.state.internet?
+              <NoInternet/>
+            :
+            <Animated.View style={{marginTop: this.state.filter_hidden}}>
+              <FilterBar
+                Refresh_List={this.Refresh_List.bind(this)}
+                Event_Emitter={this.eventEmitter}
+                BackgroundColor={this.props.FilterBackgroundColor}/>
+            </Animated.View>
+            }
+          </View>
 
           <View style={{paddingBottom: 0}}>
             {this.state.firstLoad && !this.state.data.length?
