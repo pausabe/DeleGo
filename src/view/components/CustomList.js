@@ -8,7 +8,8 @@ import {
   FlatList,
   NetInfo,
   RefreshControl,
-  Animated
+  Animated,
+  AsyncStorage
 } from 'react-native';
 
 import EventEmitter from 'EventEmitter';
@@ -95,7 +96,9 @@ export default class CustomList extends Component {
     }
     else if(this.state.internet === null && connectionInfo.type==='none'){
       //first load no internet.. load local data
-      this._handleRefresh();
+      this.setState({internet: connectionInfo.type!=='none'},()=>{
+          this._handleRefresh();
+      });
     }
   }
 
@@ -346,10 +349,11 @@ export default class CustomList extends Component {
 
   render() {
     try {
+      console.log("internet: ", this.state.internet);
       return (
         <View >
           <View>
-            {this.state.internet !== null && !this.state.internet?
+            {this.state.internet == false?
               <NoInternet/>
             :
             <Animated.View style={{marginTop: this.state.filter_hidden}}>

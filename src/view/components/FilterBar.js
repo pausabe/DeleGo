@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  AsyncStorage
  } from 'react-native';
 
 import Styles from '../../utils/Styles';
@@ -31,12 +32,24 @@ export default class FilterBar extends Component {
   constructor(props){
     super(props);
 
-    this.state = {
-      first_selected: false,
-      second_selected: false,
-      third_selected: false,
-      fourth_selected: false,
-    }
+    AsyncStorage.getItem("filter_values").then((filter_values) => {
+      if(filter_values != null){
+        this.setState({
+          first_selected: filter_values[0] == '1'? true : false,
+          second_selected: filter_values[1] == '1'? true : false,
+          third_selected: filter_values[2] == '1'? true : false,
+          fourth_selected: filter_values[3] == '1'? true : false,
+        });
+      }
+      else{
+        this.setState({
+          first_selected: false,
+          second_selected: false,
+          third_selected: false,
+          fourth_selected: false,
+        });
+      }
+    });
 
     this.can_Refresh = true;
     this.is_Refreshing = false;
@@ -57,6 +70,8 @@ export default class FilterBar extends Component {
 
   render() {
     try {
+      if(this.state == null)
+        return null;
       return(
         <View style={[Styles.filterBar_container, {backgroundColor: this.props.BackgroundColor}]}>
           {this.state.first_selected?
@@ -107,6 +122,8 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
+        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
+        AsyncStorage.setItem('filter_values',filter_values);
         this.setState({first_selected: !this.state.first_selected});
         this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
       }
@@ -120,6 +137,8 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
+        var filter_values = (this.state.first_selected? '1' : '0') + (!this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
+        AsyncStorage.setItem('filter_values',filter_values);
         this.setState({second_selected: !this.state.second_selected});
         this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
       }
@@ -133,6 +152,8 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
+        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (!this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
+        AsyncStorage.setItem('filter_values',filter_values);
         this.setState({third_selected: !this.state.third_selected});
         this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
       }
@@ -146,6 +167,8 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
+        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (!this.state.fourth_selected? '1' : '0');
+        AsyncStorage.setItem('filter_values',filter_values);
         this.setState({fourth_selected: !this.state.fourth_selected});
         this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
       }
