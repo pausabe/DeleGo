@@ -86,8 +86,7 @@ export default class CustomList extends Component {
       //console.log("Firs load or recupered internet connection");
 
       //console.log("setState 7");
-      // this.page = 1;
-      this.setState({/*data: [],*/internet: connectionInfo.type!=='none'},()=>{
+      this.setState({internet: connectionInfo.type!=='none'},()=>{
         if(this.state.firstLoad) {
           this._handleRefresh();
         }

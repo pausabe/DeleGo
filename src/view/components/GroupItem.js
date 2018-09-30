@@ -4,8 +4,10 @@ import {
   Text,
   Image,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
+  Linking
  } from 'react-native';
+import getDirections from 'react-native-google-maps-directions';
 
 import Styles from '../../utils/Styles';
 import GF from '../../utils/GlobalFunctions';
@@ -31,6 +33,27 @@ export default class GroupItem extends Component {
   onPlacePress(){
     try {
       console.log("Place Pressed");
+
+      const data = {
+        source: {
+        },
+        destination: {
+          latitude: -33.8600024,
+          longitude: 18.697459
+        },
+        params: [
+          {
+            key: "travelmode",
+            value: "driving" // may be "walking", "bicycling" or "transit" as well
+          },
+          {
+            key: "dir_action",
+            value: "navigate" // this instantly initializes navigation using the given travel mode
+          }
+        ]
+      }
+
+      getDirections(data);
     }
     catch (e) {
       console.log("Error: ", e);
@@ -40,6 +63,8 @@ export default class GroupItem extends Component {
   onMailPress(){
     try {
       console.log("Mail Pressed");
+
+      Linking.openURL('mailto:support@example.com?subject=SendMail&body=Description');
     }
     catch (e) {
       console.log("Error: ", e);
@@ -49,6 +74,8 @@ export default class GroupItem extends Component {
   onLinkPress(){
     try {
       console.log("Link Pressed");
+
+      Linking.openURL('https://google.com');
     }
     catch (e) {
       console.log("Error: ", e);
@@ -113,8 +140,7 @@ export default class GroupItem extends Component {
   "place": 1,
   "description": "nonummy ultricies ornare, elit elit fermentum risus, at fringilla purus mauris a nunc. In at pede. Cras vulputate",
   "url_image": "image_1",
-  "contact_email":
-  "volutpat.Nulla.dignissim@Curabiturconsequatlectus.com",
+  "contact_email": "volutpat.Nulla.dignissim@Curabiturconsequatlectus.com",
   "district": "BA"
 }
 */
