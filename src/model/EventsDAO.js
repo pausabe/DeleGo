@@ -70,7 +70,8 @@ export default class EventsDAO {
     for(i=0;i<pageData.length;i++){
       //console.log("[Events] descarregant thumb ("+pageData[i].id+"): ",pageData[i].image.url_thumbnail);
       var singleProm = this.RNFS.downloadFile({
-        fromUrl: "https://pausabe.com/apps/CBCN/images/prova1LQ.jpg",//pageData[i].image.url_thumbnail,
+        //fromUrl: "https://pausabe.com/apps/CBCN/images/prova1LQ.jpg",
+        fromUrl: pageData[i].image.url_thumbnail,
         toFile: this.path+"/thumbnailEvent"+pageData[i].id+".jpg"
       });
       promises.push(singleProm.promise);
@@ -85,11 +86,23 @@ export default class EventsDAO {
     });
   }
 
-  getEventsData(pageId,internet){
+  getEventsData(pageId,internet,filter_selection){
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
 
-    const url = `http://${Constants.local_ip}:81/api/event?page=${pageId}&qnt=${Constants.events_per_page}`;
+    console.log("filter!",filter_selection);
+
+    var filter = "";
+    if(filter_selection.first)
+      filter = "&filter[rec_age]=dele";
+    else if(filter_selection.second)
+      filter = "&filter[rec_age]=1";
+    else if(filter_selection.third)
+      filter = "&filter[rec_age]=2";
+    else if(filter_selection.fourth)
+      filter = "&filter[rec_age]=3";
+
+    const url = `https://${Constants.local_ip}/api/event?page=${pageId}&qnt=${Constants.events_per_page}${filter}`;
 
     console.log("[Events] url to get events data: " + url);
 
@@ -192,7 +205,7 @@ export default class EventsDAO {
   }
 
   _throwError(errCode,localData){
-    console.log("[Events] oooh, error!");
+    console.log("[Events] oooh, error!", errCode);
     throw {errCode: errCode, localData: localData};
   }
 

@@ -49,7 +49,7 @@ export default class EventItem extends Component {
 
   componentDidMount(){
     if(!this.props.realImageSaved && !this.imageOverLocal){
-      this.props.mAdapter.saveLocalImage(this.props.item.id, `https://pausabe.com/apps/CBCN/images/prova1.jpg`/*this.props.item.image.url_real*/)
+      this.props.mAdapter.saveLocalImage(this.props.item.id, /*`https://pausabe.com/apps/CBCN/images/prova1.jpg`*/this.props.item.image.url_real)
       .then(()=>{
         console.log("guapo");
         Animated.timing(this.state.opaItem,{
@@ -107,7 +107,7 @@ export default class EventItem extends Component {
     try {
       // console.log("SUPER RENDER ADVISE",this.props.realImageSaved);
 
-      renderType = ""
+      renderType = "";
 
       if(this.imageOverLocal){
         renderType += "| imageOverLocal ";

@@ -15,7 +15,8 @@ export default class GroupsDAO {
     for(i=0;i<pageData.length;i++){
       console.log("[Groups] descarregant group image ("+pageData[i].id+"): ",pageData[i].url_image);
       var singleProm = this.RNFS.downloadFile({
-        fromUrl: "https://pausabe.com/apps/CBCN/images/prova2LQ.jpg",//pageData[i].url_image,
+        //fromUrl: "https://pausabe.com/apps/CBCN/images/prova2LQ.jpg",//pageData[i].url_image,
+        fromUrl: pageData[i].url_image,
         toFile: this.path+"/group"+pageData[i].id+".jpg"
       });
       promises.push(singleProm.promise);
@@ -34,7 +35,7 @@ export default class GroupsDAO {
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
 
-    const url = `http://${Constants.local_ip}:81/api/group?page=${pageId}&qnt=${Constants.groups_per_page}`;
+    const url = `https://${Constants.local_ip}/api/group?page=${pageId}&qnt=${Constants.groups_per_page}`;
 
     console.log("[Groups] url to get groups data: " + url);
 

@@ -56,6 +56,27 @@ export default class CustomList extends Component {
       filter_hidden: new Animated.Value(0)
     };
 
+    AsyncStorage.getItem("filter_values").then((filter_values) => {
+      if(filter_values != null){
+        this.filter_selection = {
+          first: filter_values[0] == '1'? true : false,
+          second: filter_values[1] == '1'? true : false,
+          third: filter_values[2] == '1'? true : false,
+          fourth: filter_values[3] == '1'? true : false
+        }
+      }
+      else{
+        this.filter_selection = {
+          first: false,
+          second: false,
+          third: false,
+          fourth: false
+        }
+      }
+
+      console.log("FILTER SELECTION", this.filter_selection);
+    });
+
     this.current_refresh_is_by_button = false;
     this.need_forced_animation = false;
     this.refreshing_by_bottom_bar = false;
@@ -115,10 +136,15 @@ export default class CustomList extends Component {
 
   _getGroupsData(){
     console.log("[Groups] requested page n: "+this.page);
-    this.mAdapter.getGroupsData(this.page, this.state.internet)
+    this.mAdapter.getGroupsData(this.page, this.state.internet, this.filter_selection)
     .then((res)=>{
       if(res){
-        console.log("data page "+this.page,res);
+        console.log("[Groups] data page "+this.page,res);
+
+        if(res.groupsData.length == 0)
+          this.noMorePages = true;
+        else
+          this.noMorePages = false;
 
         this._updateNewData(res.groupsData);
       }
@@ -134,10 +160,15 @@ export default class CustomList extends Component {
 
   _getEventsData(){
     //console.log("[Events] requested page n: "+this.page);
-    this.mAdapter.getEventsData(this.page,this.state.internet)
+    this.mAdapter.getEventsData(this.page, this.state.internet, this.filter_selection)
     .then((res)=>{
       if(res){
-        //console.log("[Events] data page "+this.page,res);
+        console.log("[Events] data page "+this.page,res);
+
+        if(res.eventsData.length == 0)
+          this.noMorePages = true;
+        else
+          this.noMorePages = false;
 
         for(var key in res.realImageSaved){
           if(res.realImageSaved.hasOwnProperty(key)){
@@ -338,6 +369,13 @@ export default class CustomList extends Component {
 
   Refresh_List(first_selected, second_selected, third_selected, fourth_selected){
     try {
+      this.filter_selection = {
+        first: first_selected,
+        second: second_selected,
+        third: third_selected,
+        fourth: fourth_selected
+      }
+      console.log("FILTER SELECTION", this.filter_selection);
       this.refreshing_by_filter = true;
       this.Button_Refresh();
     }

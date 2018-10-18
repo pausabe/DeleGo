@@ -122,10 +122,11 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
-        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
-        AsyncStorage.setItem('filter_values',filter_values);
-        this.setState({first_selected: !this.state.first_selected});
-        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+        var new_selection = !this.state.first_selected;
+        var filter_values = (new_selection? '1' : '0') + (this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
+        AsyncStorage.setItem('filter_values', filter_values);
+        this.setState({first_selected: new_selection});
+        this.props.Refresh_List(new_selection, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
       }
     }
     catch (e) {
@@ -137,10 +138,11 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
-        var filter_values = (this.state.first_selected? '1' : '0') + (!this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
+        var new_selection = !this.state.second_selected;
+        var filter_values = (this.state.first_selected? '1' : '0') + (new_selection? '1' : '0') + (this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
         AsyncStorage.setItem('filter_values',filter_values);
-        this.setState({second_selected: !this.state.second_selected});
-        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+        this.setState({second_selected: new_selection});
+        this.props.Refresh_List(this.state.first_selected, new_selection, this.state.third_selected, this.state.fourth_selected);
       }
     }
     catch (e) {
@@ -152,10 +154,11 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
-        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (!this.state.third_selected? '1' : '0') + (this.state.fourth_selected? '1' : '0');
+        var new_selection = !this.state.third_selected;
+        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (new_selection? '1' : '0') + (this.state.fourth_selected? '1' : '0');
         AsyncStorage.setItem('filter_values',filter_values);
-        this.setState({third_selected: !this.state.third_selected});
-        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+        this.setState({third_selected: new_selection});
+        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, new_selection, this.state.fourth_selected);
       }
     }
     catch (e) {
@@ -167,10 +170,11 @@ export default class FilterBar extends Component {
     try {
       if(!this.is_Refreshing && this.can_Refresh){
         this.is_Refreshing = true;
-        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (!this.state.fourth_selected? '1' : '0');
+        var new_selection = !this.state.fourth_selected;
+        var filter_values = (!this.state.first_selected? '1' : '0') + (this.state.second_selected? '1' : '0') + (this.state.third_selected? '1' : '0') + (new_selection? '1' : '0');
         AsyncStorage.setItem('filter_values',filter_values);
-        this.setState({fourth_selected: !this.state.fourth_selected});
-        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, this.state.fourth_selected);
+        this.setState({fourth_selected: new_selection});
+        this.props.Refresh_List(this.state.first_selected, this.state.second_selected, this.state.third_selected, new_selection);
       }
     }
     catch (e) {

@@ -2,11 +2,11 @@ import EventsDAO from '../../model/EventsDAO';
 const dataAcc = new EventsDAO();
 
 export default class EventsModelAdapter {
-  getEventsData(pageId,internet){
-    return dataAcc.getEventsData(pageId,internet);
+  getEventsData(pageId, internet, filter_selection){
+    return dataAcc.getEventsData(pageId, internet, filter_selection);
   }
 
-  saveLocalImage(itemId,imagePath){
-    return dataAcc.saveLocalImage(itemId,imagePath);
+  saveLocalImage(itemId, imagePath){
+    return dataAcc.saveLocalImage(itemId, imagePath);
   }
 }
