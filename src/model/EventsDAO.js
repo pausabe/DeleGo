@@ -1,5 +1,3 @@
-import {Platform} from 'react-native';
-
 import Constants from '../utils/Constants';
 
 export default class EventsDAO {
@@ -102,7 +100,7 @@ export default class EventsDAO {
     else if(filter_selection.fourth)
       filter = "&filter[rec_age]=3";
 
-    const url = `https://${Constants.local_ip}/api/event?page=${pageId}&qnt=${Constants.events_per_page}${filter}`;
+    const url = `${Constants.local_ip}/api/event?page=${pageId}&qnt=${Constants.events_per_page}${filter}`;
 
     console.log("[Events] url to get events data: " + url);
 

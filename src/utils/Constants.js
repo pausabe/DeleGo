@@ -6,7 +6,9 @@ module.exports = {
   //local_ip: '192.168.1.135:81', //eth
   //local_ip: '172.20.10.2:81', //mobil
   //local_ip: '192.168.1.38:81', //wifi can martorell
-  local_ip: 'delego.cat',
+  //local_ip: 'delego.cat:81',
+  //local_ip: '46.183.115.19:81',
+  local_ip: 'https://delego.cat',
   maps_latitude_delta: 0.3,
   maps_longitude_delta: 0.2,
 };

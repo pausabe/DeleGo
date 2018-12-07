@@ -35,7 +35,7 @@ export default class GroupsDAO {
     var pagePath = this.path+"/local/aux/page"+pageId+".json";
     var pagePathSaved = this.path+"/local/page"+pageId+".json";
 
-    const url = `https://${Constants.local_ip}/api/group?page=${pageId}&qnt=${Constants.groups_per_page}`;
+    const url = `${Constants.local_ip}/api/group?page=${pageId}&qnt=${Constants.groups_per_page}`;
 
     console.log("[Groups] url to get groups data: " + url);
 
@@ -129,7 +129,7 @@ export default class GroupsDAO {
   }
 
   _throwError(errCode,localData){
-    console.log("oooh, error!");
+    console.log("[Groups] oooh, error!", errCode);
     throw {errCode: errCode, localData: localData};
   }
 
